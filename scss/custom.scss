@@ -1,0 +1,28 @@
+$theme-colors: (
+        "color1": rgb(29, 37, 45), //#1d252d
+
+);
+
+//$pagination-active-bg: rgb(47, 102, 144);
+//$pagination-color: rgb(47, 102, 144);
+//
+//.btn-group-xs > .btn, .btn-xs {
+//  padding: .25rem .4rem !important;
+//  font-size: .875rem !important;
+//  line-height: .5 !important;
+//  border-radius: .2rem !important;
+//}
+//
+////Source: https://bootstrap-vue.js.org/docs/components/collapse/#hiding-and-showing-content-in-the-toggle-button-based-on-collapse-state
+//.collapsed > .when-opened,
+//:not(.collapsed) > .when-closed {
+//  display: none;
+//}
+//
+//.cursor-pointer {
+//  cursor: pointer !important;
+//}
+
+// Bootstrap and its default variables
+@import "~bootstrap/scss/bootstrap";
+@import 'bootstrap-vue/src/index.scss';
