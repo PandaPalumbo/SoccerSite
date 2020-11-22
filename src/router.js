@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import Explore from "./views/Explore";
-import Login from "@/views/Login";
+import Competitions from './views/Competitions.vue'
+import Teams from "@/views/Teams";
+import Players from "@/views/Players";
+import Seasons from "@/views/Seasons";
 
 Vue.use(Router)
 
@@ -14,14 +16,21 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/explore',
-      name: 'explore',
-      component: Explore,
+      path: '/competitions/',
+      component: Competitions,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login,
+      path: '/teams/',
+      component: Teams,
     },
+    {
+      path: '/seasons/',
+      component: Seasons,
+    },
+    {
+      path: '/players/',
+      component: Players,
+    },
+
   ]
 })
