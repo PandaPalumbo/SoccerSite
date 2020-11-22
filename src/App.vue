@@ -39,7 +39,8 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <router-view/>
+    <router-view v-if="loaded"/>
+    <b-spinner v-else variant="dark"></b-spinner>
   </div>
 </template>
 
@@ -47,7 +48,11 @@
 
 export default {
   name: 'App',
-
+  computed:{
+    loaded(){
+      return this.$store.state.loaded
+    }
+  }
 }
 </script>
 

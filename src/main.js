@@ -15,5 +15,6 @@ new Vue({
   store,
   render: h => h(App),
   created() {
+    store.dispatch('initial')
   },
 }).$mount('#app');

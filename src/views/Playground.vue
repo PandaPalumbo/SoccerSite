@@ -14,13 +14,20 @@
 
 <script>
 import api from '../api';
-
 export default {
 name: "PlayGround.vue",
+  computed:{
+    db(){
+      return this.$store.state.db;
+    }
+  },
   methods:{
     test(){
       api.getAllLeagues(data => console.log(data));
     }
+  },
+  mounted() {
+    console.log(this.db);
   }
 }
 </script>

@@ -1,7 +1,7 @@
 import axios from 'axios';
-import fs from 'fs';
 
 //base url stuff for https://soccersapi.com/page/documentation
+//https://documenter.getpostman.com/view/11399692/SztA99ag?version=latest#dd5b9f84-354e-46b5-8479-227bf8a98573
 const user = process.env.VUE_APP_USER
 const token = process.env.VUE_APP_TOKEN
 const baseQuery = '?user='+user+'&token='+token;
@@ -15,20 +15,23 @@ const baseConfig = {
 
 
 export default {
-
-    getAllLeagues(cb){
-        let params =
-        {
-            type: 'leagues',
-            query:'&t=list&page=1'
-        }
-        let config = buildConfig(params);
-        getData(config, data => {
-            saveToJson(params, data.data)
-            cb(data.data)
-        });
+    saveData:{
+        getAllLeagues(cb){
+            let params =
+                {
+                    type: 'leagues',
+                    query:'&t=list&page=1'
+                }
+            let config = buildConfig(params);
+            getData(config, data => {
+                // saveToJson(params, data.data)
+                cb(data.data)
+            });
+        },
     },
+    firebase:{
 
+    },
 }
 //gets data given the proper config
 function getData(config, cb) {
@@ -49,7 +52,7 @@ function buildConfig(params){
         config.url += query;
     return config
 }
-
-function saveToJson(params, data){
-    fs.writeFileSync('../public/data/'+ params.type +'.json', data)
-}
+//
+// function saveToJson(params, data){
+//     // fs.writeFileSync('./public/data/'+ params.type +'.json', data)
+// }
