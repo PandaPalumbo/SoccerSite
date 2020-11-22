@@ -1,4 +1,5 @@
-var axios = require('axios');
+import axios from 'axios';
+import fs from 'fs';
 
 //base url stuff for https://soccersapi.com/page/documentation
 const user = process.env.VUE_APP_USER
@@ -12,7 +13,6 @@ const baseConfig = {
     headers: {}
 };
 
-import fs from 'fs';
 
 export default {
 
