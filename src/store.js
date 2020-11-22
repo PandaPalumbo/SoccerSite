@@ -6,12 +6,16 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        data:[]
+        leagues:[],
+        teams:[],
+        players:[],
+        seasons:[],
     },
     getters: {
     },
     mutations: {
     },
     actions: {
+
     }
 })

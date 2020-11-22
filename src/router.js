@@ -5,6 +5,7 @@ import Competitions from './views/Competitions.vue'
 import Teams from "@/views/Teams";
 import Players from "@/views/Players";
 import Seasons from "@/views/Seasons";
+import Playground from "@/views/Playground";
 
 Vue.use(Router)
 
@@ -30,6 +31,10 @@ export default new Router({
     {
       path: '/players/',
       component: Players,
+    },
+    {
+      path: '/playground/',
+      component: Playground,
     },
 
   ]
