@@ -64,7 +64,6 @@ export default new Vuex.Store({
                     state.selected.leagues.map(league => {
                         if(league.id === id)
                             league['stats'] = data.data;
-                            console.log(state.selected.leagues)
                     })
                 })
 
