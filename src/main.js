@@ -11,8 +11,11 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {
   faTimes
 }  from '@fortawesome/free-solid-svg-icons'
+import VueRandomColor from 'vue-randomcolor'
+
 library.add(faTimes)
 
+Vue.use(VueRandomColor)
 Vue.use(BootstrapVue);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

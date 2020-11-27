@@ -1,6 +1,6 @@
 <template>
   <b-row class=" m-4 bg-dark p-2">
-    <b-col v-show="sidebarOpen" cols="3" class="bg-dark text-light border-light border rounded">
+    <b-col v-show="sidebarOpen" cols="3" class="bg-dark text-light border-light border rounded overflow-auto">
       <SidebarRow
           v-for="(league, i) in leagues" :key="i" type="leagues"
           class="bg-dark border border-secondary rounded"
@@ -15,7 +15,7 @@
           </b-row>
         </b-col>
         <b-col>
-          <SelectedPill v-for="(league) in selectedLeagues" :key="league.id" :data="league" :label="league.name"/>
+          <SelectedPill v-for="(league) in selectedLeagues" :key="league.id" :data="league" :label="league.name" variant="danger"/>
         </b-col>
       </b-row>
       <div class="m-2 bg-light-dark rounded p-2" v-if="selectedLeagues.length > 0">

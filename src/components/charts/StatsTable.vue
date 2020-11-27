@@ -4,8 +4,8 @@
       <thead>
       <tr>
         <th scope="col" colspan="2" class="text-center">
-          <span>{{ label }}</span>
-          <span class="text-warning">{{ areAnyZero ? '*' : '' }}</span>
+          <span>{{ label + ' ' }}</span>
+          <span class="text-warning">{{ areAnyZero ? ' *' : '' }}</span>
         </th>
       </tr>
       </thead>

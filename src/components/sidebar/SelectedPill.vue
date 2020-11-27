@@ -1,5 +1,5 @@
 <template>
-  <b-form-tag @remove="toggle" variant="primary">
+  <b-form-tag @remove="toggle" :variant="variant">
     {{label}}
   </b-form-tag>
 </template>
@@ -14,6 +14,10 @@ export default {
       required: true,
     },
     label:{
+      type: String,
+      required: true,
+    },
+    variant:{
       type: String,
       required: true,
     }
