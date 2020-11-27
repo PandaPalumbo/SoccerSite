@@ -24,6 +24,10 @@ name: "SidebarRow",
     label:{
       type: String,
       required: true,
+    },
+    type:{
+      type: String,
+      required: true,
     }
   },
   computed:{
@@ -37,14 +41,10 @@ name: "SidebarRow",
   methods:{
     toggle(){
         this.$store.commit('updateSelected',{
-          type:'leagues',
+          type:this.type,
           add:!this.isSelected,
           value:this.data,
         })
-      this.$store.dispatch('updateSelectedStatistics', {
-        type: 'leagues',
-        id: this.data.id,
-      })
     },
   }
 }
