@@ -66,13 +66,31 @@
                 :labels="['0-15th minute','15-30th minute','30-45th minute','45-60th minute','60-75th minute','75-90th minute', '90-120th minute']"
                 :background-colors="[getColor(),getColor(),getColor(),getColor(),getColor(),getColor(),]"
             />
+            <b-col cols="11" class="mx-auto">
+              <table class="table table-striped table-dark">
+                <thead>
+                <tr>
+                  <th>Minute Range</th>
+                  <th>Percentage of Total Goals</th>
+                  <th>Goals in Range</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(subkey, i) in Object.keys(tabStats[key])" :key="i">
+                  <td>{{subkey}}</td>
+                  <td>{{tabStats[key][subkey]['percentage_total_goals'] + '%'}}</td>
+                  <td>{{tabStats[key][subkey]['total']}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </b-col>
           </b-row>
 
         </b-tab>
       </b-tabs>
     </b-row>
     <b-row class="justify-content-center" v-else>
-      <b-spinner></b-spinner>
+      <b-spinner variant="light"></b-spinner>
     </b-row>
   </div>
 </template>
@@ -126,7 +144,7 @@ export default {
             newStats[key] = stats[key];
           }
         });
-        console.log(newStats)
+        //console.log(newStats)
         return newStats;
       } else
         return false;
@@ -137,7 +155,6 @@ export default {
           this.leagues.map(league => {
             if (league.id == id) {
               this.stats = data.data;
-              console.log('set stats')
               this.tabStats = this.getTabStats(this.stats)
               this.$store.dispatch('updateSelectedStatistics', {
                 type: 'leagues',

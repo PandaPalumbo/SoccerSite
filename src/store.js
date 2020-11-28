@@ -59,8 +59,8 @@ export default new Vuex.Store({
             });
         },
         updateSelectedStatistics({state}, {type, id, data}){
-            if(type === 'leagues' && state.selected.leagues.some(league => league.id === id))
-                state.selected.leagues.map(league =>{
+            if(type === 'leagues' && state.selected.leagues.some(league => league.id == id))
+                state.selected.leagues.forEach(league =>{
                     if(league.id === id)
                         league['stats'] = data;
                 })
