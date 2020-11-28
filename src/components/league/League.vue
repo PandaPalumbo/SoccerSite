@@ -20,7 +20,7 @@
       </b-jumbotron>
     </b-row>
     <b-row v-if="stats && tabStats" class="bg-light-dark p-1 mb-2 rounded">
-      <b-tabs active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab  bg-dark">
+      <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab  bg-dark">
         <b-tab title-link-class="text-light  font-weight-bold" v-for="(key, i) in Object.keys(tabStats)"
                :key="Math.random() * i" :title="prettyCasing(key)">
           <b-row class="m-2 bg-light-dark" v-if="key === 'assists'">

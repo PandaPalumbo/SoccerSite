@@ -1,7 +1,26 @@
 <template>
   <div class="mx-4">
+    <b-row class="league-cont">
+      <b-jumbotron bg-variant="dark" text-variant="light" class="w-100 mt-1">
+        <template #header>
+          Comparing...
+        </template>
+        <template v-if="names" #lead>
+          <p>
+            <span v-for="(name, i) in names" :key="i">
+              {{i == names.length - 1 ? name: name  + ', '}}
+            </span>
+          </p>
+        </template>
+        <template #lead v-else>
+          <b-row class="justify-content-center">
+            <b-spinner></b-spinner>
+          </b-row>
+        </template>
+      </b-jumbotron>
+    </b-row>
     <b-row v-if="leaguesWithStats.length > 1 && tabLabels" class="bg-light-dark p-1 mb-2 rounded">
-      <b-tabs active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab  bg-dark">
+      <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab  bg-dark">
         <b-tab title-link-class="text-light  font-weight-bold"
                v-for="(key, i) in this.tabLabels"
                :key="Math.random() * i"
@@ -32,7 +51,10 @@ export default {
   computed: {
     ...mapState({
       selectedLeagues: state => state.selected.leagues,
-    })
+    }),
+    names(){
+      return this.selectedLeagues.map(leagues => leagues.name)
+    },
   },
   data() {
     return {
@@ -44,7 +66,7 @@ export default {
     prettyCasing(string) {
       let splitString = string.split('_');
       let res = "";
-      splitString.map(string => {
+      splitString.map((string) => {
         string = string.charAt(0).toUpperCase() + string.slice(1)
         res += string + " "
       })

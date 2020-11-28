@@ -1,5 +1,6 @@
 <template>
   <b-col class="mx-auto my-1" cols="11" v-if="subKeys">
+
     <div v-for="(tableName, i) in statlabels" :key="i">
       <table v-if="tableName != 'name'" class="table table-striped table-dark table-bordered">
         <thead>
@@ -21,13 +22,16 @@
     </div>
   </b-col>
   <b-col class="mx-auto my-1" cols="11" v-else>
+<!--    <ComparisonBars  :dataset="barData" :labels="wantedStats.map(stat => stat['name'])"/>-->
     <table class="table table-striped table-dark">
       <thead>
       <tr>
         <th :colspan="statlabels.length + 1" class="text-center">{{prettyCasing(dataField)}}</th>
       </tr>
       <tr>
-        <th v-for="(label,i) in statlabels" :key="i">{{prettyCasing(label)}}</th>
+        <th v-for="(label,i) in statlabels" :key="i">
+          {{prettyCasing(label)}} <span class="text-warning" v-show="wantedStats.some(stat => stat[label] == 0)">*</span>
+        </th>
       </tr>
       </thead>
       <tbody>
@@ -38,12 +42,14 @@
         </tr>
       </tbody>
     </table>
+    <span class="text-warning" > * Values of 0 may be incomplete data</span>
   </b-col>
 </template>
 
 <script>
 export default {
   name: "ComparisonTable",
+  components:{},
   props: {
     data: {
       type: Array,
@@ -91,13 +97,12 @@ export default {
       else
         return null;
     },
-    // subKeyStats(){
-    //   if(this.subKeys) {
-    //     let stats = {};
-    //   }else {
-    //     return null;
-    //   }
-    // }
+    barData(){
+      return this.wantedStats.map(stat=> ({
+        data:[stat.total, stat.avg_per_match]
+      }))
+
+    },
   },
   methods:{
     prettyCasing(string) {
