@@ -45,6 +45,7 @@ import {mapState} from 'vuex';
 import api from "@/api";
 import ComparisonTable from "@/components/charts/ComparisonTable";
 
+//TODO add more graphs and stuff;
 export default {
   name: "LeagueComparison",
   components:{ComparisonTable},
