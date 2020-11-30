@@ -73,16 +73,36 @@ def api_get_players():
 def api_get_fixtures():
     leagues = db_get_leagues()
     fixtures = []
+    ids = []
     for league in leagues:
         config = {
-            'type': 'fixtures',
-            'query': '&t=season&season_id='+ str(league['current_season_id'])
+            'type': 'fixtures/',
+            'query': '&t=season&season_id=' + str(league['current_season_id'])
         }
         res = api_call(config)
-        if(res):
+        if (res):
             for fixture in res:
-                fixtures.append(fixture)
+                if fixture['id'] not in ids:
+                    ids.append(fixture['id'])
+                    fixtures.append(fixture)
     return fixtures
+
+
+def api_get_league_stats():
+    leagues = db_get_leagues()
+    fixtures = []
+    ids = []
+    for league in leagues:
+        config = {
+            'type': 'stats/',
+            'query': '&t=league&id=' + str(league['id'])
+        }
+        res = api_call(config)
+        if (res):
+            fixtures.append(res)
+    print(fixtures)
+    return fixtures
+
 
 # DB GETTERS ####################################################
 def db_get_leagues():
@@ -95,7 +115,6 @@ def db_get_leagues():
     cursor.execute(sql)
 
     res = db_res_to_json(cursor)
-    print(res)
     return res
 
 
@@ -196,6 +215,7 @@ def save_players():
         db.commit()
         print(cursor.rowcount, ' record inserted.')
 
+
 def save_fixtures():
     fixtures = api_get_fixtures()
 
@@ -231,7 +251,273 @@ def save_fixtures():
                    second_assistant_id,
                    fourth_assistant_id
                    )
-                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'''
+                 VALUES (
+                %s,
+                 %s, 
+                %s, 
+                %s,
+                 %s, 
+                 %s,
+                  %s, 
+                  %s, 
+                  %s, 
+                  %s,
+                   %s, 
+                   %s, 
+                   %s, 
+                   %s, 
+                   %s,
+                   %s,
+                   %s,
+                   %s, 
+                   %s,
+                   %s,
+                   %s,
+                   %s,
+                   %s,
+                   %s,
+                   %s,
+                   %s,
+                   %s,
+                   %s
+                   )'''
+    cursor = db.cursor()
+    # sql2 = """
+    #     INSERT INTO fixture_weather
+    #     (desc, temp_celc, temp_fahrenheit, wind_kmph, wind_miles, wind_direction, humidity_percent, pressure) VALUES
+    #     (%s, %s, %s, %s, %s, %s, %s, %s)
+    # """
+
+    for fixture in fixtures:
+        val = (
+            fixture['id'],
+            fixture['status'],
+            fixture['pitch'],
+            fixture['referee_id'],
+            fixture['round_id'],
+            fixture['season_id'],
+            fixture['stage_id'],
+            fixture['group_id'],
+            fixture['aggregate_id'],
+            fixture['winner_team_id'],
+            fixture['venue_id'],
+            fixture['leg'],
+            fixture['deleted'],
+            fixture['time']['timestamp'],
+            fixture['teams']['home']['id'],
+            fixture['teams']['away']['id'],
+            fixture['league']['id'],
+            fixture['scores']['home_score'],
+            fixture['scores']['away_score'],
+            fixture['scores']['ht_score'],
+            fixture['scores']['ft_score'],
+            fixture['scores']['et_score'],
+            fixture['scores']['ps_score'],
+            fixture["standings"]['home_position'],
+            fixture["standings"]['away_position'],
+            fixture["assistants"]['first_assistant_id'],
+            fixture["assistants"]['second_assistant_id'],
+            fixture["assistants"]['fourth_assistant_id']
+        )
+
+        cursor.execute(sql, val)
+        db.commit()
+        print(cursor.rowcount, ' record inserted.')
+        # if(fixture['weather_report'] != None):
+        #     val2 = (
+        #         fixture['weather_report']['desc'],
+        #         str(fixture['weather_report']['temp']['celsius']),
+        #         str(fixture['weather_report']['temp']['fahrenheit']),
+        #         str(fixture['weather_report']['wind']['kmph']),
+        #         str(fixture['weather_report']['wind']['miles']),
+        #         fixture['weather_report']['wind']['direction'],
+        #         str(fixture['weather_report']['humidity_percent']),
+        #         str(fixture['weather_report']['pressure'])
+        #     )
+        #     cursor.execute(sql2, val2)
+        #
+        # print(cursor.rowcount, ' record inserted.')
+
+
+def save_league_stats():
+    stats = api_get_league_stats()
+    cursor = db.cursor()
+    sql = '''
+        INSERT INTO league_stats (season_id,league_id,number_of_teams,number_of_matches,number_of_matches_played,team_most_scoredid,team_most_scoredtotal_goals,player_most_scoredid,player_most_scoredtotal_goals,substituted_intotal,substituted_inavg_per_match,substituted_inavg_every_minutes,assiststotal,assistsavg_per_match,assistsavg_every_minutes,cardstotaltotal,cardstotalavg_per_match,cardstotalavg_every_minutes,cardsyellowtotal,cardsyellowavg_per_match,cardsyellowavg_every_minutes,cardsyellowredtotal,cardsyellowredavg_per_match,cardsyellowredavg_every_minutes,cardsredtotal,cardsredavg_per_match,cardsredavg_every_minutes,goalsoveralltotal,goalsoverallpercentage_total_goals,goalsoverallavg_per_match,goalsoverallavg_every_minutes,goalshometotal,goalshomepercentage_total_goals,goalshomeavg_per_match,goalshomeavg_every_minutes,goalsawaytotal,goalsawaypercentage_total_goals,goalsawayavg_per_match,goalsawayavg_every_minutes,clean_sheetsoveralltotal,clean_sheetsoverallavg_per_match,clean_sheetshometotal,clean_sheetshomeavg_per_match,clean_sheetsawaytotal,clean_sheetsawayavg_per_match,goals_scored_range015total,goals_scored_range015percentage_total_goals,goals_scored_range1530total,goals_scored_range1530percentage_total_goals,goals_scored_range3045total,goals_scored_range3045percentage_total_goals,goals_scored_range4560total,goals_scored_range4560percentage_total_goals,goals_scored_range6075total,goals_scored_range6075percentage_total_goals,goals_scored_range7590total,goals_scored_range7590percentage_total_goals,goals_scored_range90120total,goals_scored_range90120percentage_total_goals,goal_lineover05total,goal_lineover05percentage_total_matches,goal_lineover15total,goal_lineover15percentage_total_matches,goal_lineover25total,goal_lineover25percentage_total_matches,goal_lineover35total,goal_lineover35percentage_total_matches,goal_lineover45total,goal_lineover45percentage_total_matches,goal_lineover55total,goal_lineover55percentage_total_matches,goal_lineunder05total,goal_lineunder05percentage_total_matches,goal_lineunder15total,goal_lineunder15percentage_total_matches,goal_lineunder25total,goal_lineunder25percentage_total_matches,goal_lineunder35total,goal_lineunder35percentage_total_matches,goal_lineunder45total,goal_lineunder45percentage_total_matches,goal_lineunder55total,goal_lineunder55percentage_total_matches) 
+        VALUES(%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ,%s
+        ) 
+    '''
+    for stat in stats:
+        val = (stat['season_id']
+        ,stat['league_id']
+        ,stat['number_of_teams']
+        ,stat['number_of_matches']
+        ,stat['number_of_matches_played']
+        ,stat['team_most_scored']['id']
+        ,stat['team_most_scored']['total_goals']
+        ,stat['player_most_scored']['id']
+        ,stat['player_most_scored']['total_goals']
+        ,stat['substituted_in']['total']
+        ,stat['substituted_in']['avg_per_match']
+        ,stat['substituted_in']['avg_every_minutes']
+        ,stat['assists']['total']
+        ,stat['assists']['avg_per_match']
+        ,stat['assists']['avg_every_minutes']
+        ,stat['cards']['total']['total']
+        ,stat['cards']['total']['avg_per_match']
+        ,stat['cards']['total']['avg_every_minutes']
+        ,stat['cards']['yellow']['total']
+        ,stat['cards']['yellow']['avg_per_match']
+        ,stat['cards']['yellow']['avg_every_minutes']
+        ,stat['cards']['yellowred']['total']
+        ,stat['cards']['yellowred']['avg_per_match']
+        ,stat['cards']['yellowred']['avg_every_minutes']
+        ,stat['cards']['red']['total']
+        ,stat['cards']['red']['avg_per_match']
+        ,stat['cards']['red']['avg_every_minutes']
+        ,stat['goals']['overall']['total']
+        ,stat['goals']['overall']['percentage_total_goals']
+        ,stat['goals']['overall']['avg_per_match']
+        ,stat['goals']['overall']['avg_every_minutes']
+        ,stat['goals']['home']['total']
+        ,stat['goals']['home']['percentage_total_goals']
+        ,stat['goals']['home']['avg_per_match']
+        ,stat['goals']['home']['avg_every_minutes']
+        ,stat['goals']['away']['total']
+        ,stat['goals']['away']['percentage_total_goals']
+        ,stat['goals']['away']['avg_per_match']
+        ,stat['goals']['away']['avg_every_minutes']
+        ,stat['clean_sheets']['overall']['total']
+        ,stat['clean_sheets']['overall']['avg_per_match']
+        ,stat['clean_sheets']['home']['total']
+        ,stat['clean_sheets']['home']['avg_per_match']
+        ,stat['clean_sheets']['away']['total']
+        ,stat['clean_sheets']['away']['avg_per_match']
+        ,stat['goals_scored_range']["0-15"]['total']
+        ,stat['goals_scored_range']["0-15"]['percentage_total_goals']
+        ,stat['goals_scored_range']["15-30"]['total']
+        ,stat['goals_scored_range']["15-30"]['percentage_total_goals']
+        ,stat['goals_scored_range']["30-45"]['total']
+        ,stat['goals_scored_range']["30-45"]['percentage_total_goals']
+        ,stat['goals_scored_range']["45-60"]['total']
+        ,stat['goals_scored_range']["45-60"]['percentage_total_goals']
+        ,stat['goals_scored_range']["60-75"]['total']
+        ,stat['goals_scored_range']["60-75"]['percentage_total_goals']
+        ,stat['goals_scored_range']["75-90"]['total']
+        ,stat['goals_scored_range']["75-90"]['percentage_total_goals']
+        ,stat['goals_scored_range']["90-120"]['total']
+        ,stat['goals_scored_range']["90-120"]['percentage_total_goals']
+        ,stat['goal_line']['over']['0.5']['total']
+        ,stat['goal_line']['over']['0.5']['percentage_total_matches']
+        ,stat['goal_line']['over']['1.5']['total']
+        ,stat['goal_line']['over']['1.5']['percentage_total_matches']
+        ,stat['goal_line']['over']['2.5']['total']
+        ,stat['goal_line']['over']['2.5']['percentage_total_matches']
+        ,stat['goal_line']['over']['3.5']['total']
+        ,stat['goal_line']['over']['3.5']['percentage_total_matches']
+        ,stat['goal_line']['over']['4.5']['total']
+        ,stat['goal_line']['over']['4.5']['percentage_total_matches']
+        ,stat['goal_line']['over']['5.5']['total']
+        ,stat['goal_line']['over']['5.5']['percentage_total_matches']
+        ,stat['goal_line']['under']['0.5']['total']
+        ,stat['goal_line']['under']['0.5']['percentage_total_matches']
+        ,stat['goal_line']['under']['1.5']['total']
+        ,stat['goal_line']['under']['1.5']['percentage_total_matches']
+        ,stat['goal_line']['under']['2.5']['total']
+        ,stat['goal_line']['under']['2.5']['percentage_total_matches']
+        ,stat['goal_line']['under']['3.5']['total']
+        ,stat['goal_line']['under']['3.5']['percentage_total_matches']
+        ,stat['goal_line']['under']['4.5']['total']
+        ,stat['goal_line']['under']['4.5']['percentage_total_matches']
+        ,stat['goal_line']['under']['5.5']['total']
+        ,stat['goal_line']['under']['5.5']['percentage_total_matches']
+        )
+        cursor.execute(sql, val)
+        db.commit()
+        print(cursor.rowcount, ' record inserted.')
+
 
 # API ##############################################################
 def api_call(config):
@@ -258,7 +544,5 @@ def db_res_to_json(cursor):
         final.append(row_obj)
     return final
 
-
-api_get_fixtures()
 
 database.cnx.close()
