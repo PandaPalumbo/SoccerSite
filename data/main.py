@@ -1,6 +1,7 @@
 import database
 import settings
 import requests
+import json
 
 base_url = "https://api.soccersapi.com/v2.2/"
 api_user_config = "?user={}&token={}".format(settings.API_USER, settings.API_TOKEN)
@@ -56,17 +57,19 @@ def api_get_players():
     players = []
     ids = []
     for country in countries:
-        config = {
-            "type": 'players/',
-            "query": '&t=list&country_id=' + str(country['id'])
-        }
-        result = api_call(config)
-        if (result):
-            for player in result:
-                if (player['id'] not in ids):
-                    ids.append(player['id'])
-                    players.append(player)
-    # print('Players (' + str(len(players)) + '): ' + str(players))
+        for i in range(15, 25):
+            config = {
+                "type": 'players/',
+                "query": '&t=list&country_id=' + str(country['id']) + '&page=' + str(i)
+            }
+            result = api_call(config)
+            if (result):
+                for player in result:
+                    if (player['id'] not in ids):
+                        ids.append(player['id'])
+                        players.append(player)
+
+    print('Players (' + str(len(players)) + '): ' + str(players))
     return players
 
 
@@ -104,6 +107,104 @@ def api_get_league_stats():
     return fixtures
 
 
+def api_get_seasons():
+    leagues = db_get_leagues()
+    seasons = []
+    for league in leagues:
+        config = {
+            'type': 'seasons/',
+            'query': '&t=info&id=' + str(league['current_season_id'])
+        }
+        res = api_call(config)
+        if (res):
+            seasons.append(res)
+
+    with open('data.json', 'w') as outfile:
+        json.dump(seasons, outfile)
+    print(seasons)
+    return seasons
+
+
+def api_get_team_squad():
+    teams = db_get_teams()
+    squads = []
+    for team in teams:
+        config = {
+            'type': 'teams/',
+            'query': '&t=info&id=' + str(team['id']) + '&t=squad'
+        }
+        res = api_call(config)
+        if (res):
+            squads.append(res)
+
+    with open('data.json', 'w') as outfile:
+        json.dump(squads, outfile)
+    print(squads)
+    return squads
+
+
+def api_get_team_squad():
+    teams = db_get_teams()
+    squads = []
+    for team in teams:
+        config = {
+            'type': 'teams/',
+            'query': '&t=info&id=' + str(team['id']) + '&t=squad'
+        }
+        res = api_call(config)
+        obj = {}
+        if (res):
+            obj['team_id'] = team['id']
+            obj['season_id'] = team['season_id']
+            obj['squad'] = res['squad']
+            squads.append(obj)
+
+    with open('data.json', 'w') as outfile:
+        json.dump(squads, outfile)
+    print(squads)
+    return squads
+
+
+def api_get_teams_by_season():
+    leagues = db_get_leagues()
+    teams = []
+    for league in leagues:
+        config = {
+            'type': 'teams/',
+            'query': '&t=byseason&season_id=' + str(league['current_season_id'])
+        }
+        res = api_call(config)
+        if (res):
+            for team in res:
+                team['season_id'] = league['current_season_id']
+                teams.append(team)
+
+    with open('data.json', 'w') as outfile:
+        json.dump(teams, outfile)
+    print(teams)
+    return teams
+
+
+def api_get_team_stats():
+    teams = db_get_teams()
+    stats = []
+    for team in teams:
+        config = {
+            'type': 'stats/',
+            'query': '&t=team&id=' + str(team['id']) + '&season_id=' + str(team['season_id'])
+        }
+        res = api_call(config)
+        if (res):
+            res['team_id'] = res['id']
+            del res['id']
+            stats.append(flatten_json(res))
+
+    with open('data.json', 'w') as outfile:
+        json.dump(stats, outfile)
+    print(stats)
+    return stats
+
+
 # DB GETTERS ####################################################
 def db_get_leagues():
     cursor = db.cursor()
@@ -132,11 +233,27 @@ def db_get_league_countries():
 def db_get_countries():
     cursor = db.cursor()
     sql = """
-            SELECT * FROM countries WHERE continent != 'World'
+            SELECT * FROM countries WHERE continent != 'World' AND id = '7'
         """
     cursor.execute(sql)
     res = db_res_to_json(cursor)
     # print(res)
+    return res
+
+
+def db_get_teams():
+    cursor = db.cursor()
+    sql = """
+        SELECT team.id, team.name, team.country_id, ts.season_id as 'season_id' FROM 
+                football.teams as team
+                INNER  JOIN
+                    team_seasons ts on team.id = ts.team_id 
+                WHERE country_id != 3
+        """
+    cursor.execute(sql)
+
+    res = db_res_to_json(cursor)
+    print(res)
     return res
 
 
@@ -431,95 +548,174 @@ def save_league_stats():
     '''
     for stat in stats:
         val = (stat['season_id']
-        ,stat['league_id']
-        ,stat['number_of_teams']
-        ,stat['number_of_matches']
-        ,stat['number_of_matches_played']
-        ,stat['team_most_scored']['id']
-        ,stat['team_most_scored']['total_goals']
-        ,stat['player_most_scored']['id']
-        ,stat['player_most_scored']['total_goals']
-        ,stat['substituted_in']['total']
-        ,stat['substituted_in']['avg_per_match']
-        ,stat['substituted_in']['avg_every_minutes']
-        ,stat['assists']['total']
-        ,stat['assists']['avg_per_match']
-        ,stat['assists']['avg_every_minutes']
-        ,stat['cards']['total']['total']
-        ,stat['cards']['total']['avg_per_match']
-        ,stat['cards']['total']['avg_every_minutes']
-        ,stat['cards']['yellow']['total']
-        ,stat['cards']['yellow']['avg_per_match']
-        ,stat['cards']['yellow']['avg_every_minutes']
-        ,stat['cards']['yellowred']['total']
-        ,stat['cards']['yellowred']['avg_per_match']
-        ,stat['cards']['yellowred']['avg_every_minutes']
-        ,stat['cards']['red']['total']
-        ,stat['cards']['red']['avg_per_match']
-        ,stat['cards']['red']['avg_every_minutes']
-        ,stat['goals']['overall']['total']
-        ,stat['goals']['overall']['percentage_total_goals']
-        ,stat['goals']['overall']['avg_per_match']
-        ,stat['goals']['overall']['avg_every_minutes']
-        ,stat['goals']['home']['total']
-        ,stat['goals']['home']['percentage_total_goals']
-        ,stat['goals']['home']['avg_per_match']
-        ,stat['goals']['home']['avg_every_minutes']
-        ,stat['goals']['away']['total']
-        ,stat['goals']['away']['percentage_total_goals']
-        ,stat['goals']['away']['avg_per_match']
-        ,stat['goals']['away']['avg_every_minutes']
-        ,stat['clean_sheets']['overall']['total']
-        ,stat['clean_sheets']['overall']['avg_per_match']
-        ,stat['clean_sheets']['home']['total']
-        ,stat['clean_sheets']['home']['avg_per_match']
-        ,stat['clean_sheets']['away']['total']
-        ,stat['clean_sheets']['away']['avg_per_match']
-        ,stat['goals_scored_range']["0-15"]['total']
-        ,stat['goals_scored_range']["0-15"]['percentage_total_goals']
-        ,stat['goals_scored_range']["15-30"]['total']
-        ,stat['goals_scored_range']["15-30"]['percentage_total_goals']
-        ,stat['goals_scored_range']["30-45"]['total']
-        ,stat['goals_scored_range']["30-45"]['percentage_total_goals']
-        ,stat['goals_scored_range']["45-60"]['total']
-        ,stat['goals_scored_range']["45-60"]['percentage_total_goals']
-        ,stat['goals_scored_range']["60-75"]['total']
-        ,stat['goals_scored_range']["60-75"]['percentage_total_goals']
-        ,stat['goals_scored_range']["75-90"]['total']
-        ,stat['goals_scored_range']["75-90"]['percentage_total_goals']
-        ,stat['goals_scored_range']["90-120"]['total']
-        ,stat['goals_scored_range']["90-120"]['percentage_total_goals']
-        ,stat['goal_line']['over']['0.5']['total']
-        ,stat['goal_line']['over']['0.5']['percentage_total_matches']
-        ,stat['goal_line']['over']['1.5']['total']
-        ,stat['goal_line']['over']['1.5']['percentage_total_matches']
-        ,stat['goal_line']['over']['2.5']['total']
-        ,stat['goal_line']['over']['2.5']['percentage_total_matches']
-        ,stat['goal_line']['over']['3.5']['total']
-        ,stat['goal_line']['over']['3.5']['percentage_total_matches']
-        ,stat['goal_line']['over']['4.5']['total']
-        ,stat['goal_line']['over']['4.5']['percentage_total_matches']
-        ,stat['goal_line']['over']['5.5']['total']
-        ,stat['goal_line']['over']['5.5']['percentage_total_matches']
-        ,stat['goal_line']['under']['0.5']['total']
-        ,stat['goal_line']['under']['0.5']['percentage_total_matches']
-        ,stat['goal_line']['under']['1.5']['total']
-        ,stat['goal_line']['under']['1.5']['percentage_total_matches']
-        ,stat['goal_line']['under']['2.5']['total']
-        ,stat['goal_line']['under']['2.5']['percentage_total_matches']
-        ,stat['goal_line']['under']['3.5']['total']
-        ,stat['goal_line']['under']['3.5']['percentage_total_matches']
-        ,stat['goal_line']['under']['4.5']['total']
-        ,stat['goal_line']['under']['4.5']['percentage_total_matches']
-        ,stat['goal_line']['under']['5.5']['total']
-        ,stat['goal_line']['under']['5.5']['percentage_total_matches']
-        )
+               , stat['league_id']
+               , stat['number_of_teams']
+               , stat['number_of_matches']
+               , stat['number_of_matches_played']
+               , stat['team_most_scored']['id']
+               , stat['team_most_scored']['total_goals']
+               , stat['player_most_scored']['id']
+               , stat['player_most_scored']['total_goals']
+               , stat['substituted_in']['total']
+               , stat['substituted_in']['avg_per_match']
+               , stat['substituted_in']['avg_every_minutes']
+               , stat['assists']['total']
+               , stat['assists']['avg_per_match']
+               , stat['assists']['avg_every_minutes']
+               , stat['cards']['total']['total']
+               , stat['cards']['total']['avg_per_match']
+               , stat['cards']['total']['avg_every_minutes']
+               , stat['cards']['yellow']['total']
+               , stat['cards']['yellow']['avg_per_match']
+               , stat['cards']['yellow']['avg_every_minutes']
+               , stat['cards']['yellowred']['total']
+               , stat['cards']['yellowred']['avg_per_match']
+               , stat['cards']['yellowred']['avg_every_minutes']
+               , stat['cards']['red']['total']
+               , stat['cards']['red']['avg_per_match']
+               , stat['cards']['red']['avg_every_minutes']
+               , stat['goals']['overall']['total']
+               , stat['goals']['overall']['percentage_total_goals']
+               , stat['goals']['overall']['avg_per_match']
+               , stat['goals']['overall']['avg_every_minutes']
+               , stat['goals']['home']['total']
+               , stat['goals']['home']['percentage_total_goals']
+               , stat['goals']['home']['avg_per_match']
+               , stat['goals']['home']['avg_every_minutes']
+               , stat['goals']['away']['total']
+               , stat['goals']['away']['percentage_total_goals']
+               , stat['goals']['away']['avg_per_match']
+               , stat['goals']['away']['avg_every_minutes']
+               , stat['clean_sheets']['overall']['total']
+               , stat['clean_sheets']['overall']['avg_per_match']
+               , stat['clean_sheets']['home']['total']
+               , stat['clean_sheets']['home']['avg_per_match']
+               , stat['clean_sheets']['away']['total']
+               , stat['clean_sheets']['away']['avg_per_match']
+               , stat['goals_scored_range']["0-15"]['total']
+               , stat['goals_scored_range']["0-15"]['percentage_total_goals']
+               , stat['goals_scored_range']["15-30"]['total']
+               , stat['goals_scored_range']["15-30"]['percentage_total_goals']
+               , stat['goals_scored_range']["30-45"]['total']
+               , stat['goals_scored_range']["30-45"]['percentage_total_goals']
+               , stat['goals_scored_range']["45-60"]['total']
+               , stat['goals_scored_range']["45-60"]['percentage_total_goals']
+               , stat['goals_scored_range']["60-75"]['total']
+               , stat['goals_scored_range']["60-75"]['percentage_total_goals']
+               , stat['goals_scored_range']["75-90"]['total']
+               , stat['goals_scored_range']["75-90"]['percentage_total_goals']
+               , stat['goals_scored_range']["90-120"]['total']
+               , stat['goals_scored_range']["90-120"]['percentage_total_goals']
+               , stat['goal_line']['over']['0.5']['total']
+               , stat['goal_line']['over']['0.5']['percentage_total_matches']
+               , stat['goal_line']['over']['1.5']['total']
+               , stat['goal_line']['over']['1.5']['percentage_total_matches']
+               , stat['goal_line']['over']['2.5']['total']
+               , stat['goal_line']['over']['2.5']['percentage_total_matches']
+               , stat['goal_line']['over']['3.5']['total']
+               , stat['goal_line']['over']['3.5']['percentage_total_matches']
+               , stat['goal_line']['over']['4.5']['total']
+               , stat['goal_line']['over']['4.5']['percentage_total_matches']
+               , stat['goal_line']['over']['5.5']['total']
+               , stat['goal_line']['over']['5.5']['percentage_total_matches']
+               , stat['goal_line']['under']['0.5']['total']
+               , stat['goal_line']['under']['0.5']['percentage_total_matches']
+               , stat['goal_line']['under']['1.5']['total']
+               , stat['goal_line']['under']['1.5']['percentage_total_matches']
+               , stat['goal_line']['under']['2.5']['total']
+               , stat['goal_line']['under']['2.5']['percentage_total_matches']
+               , stat['goal_line']['under']['3.5']['total']
+               , stat['goal_line']['under']['3.5']['percentage_total_matches']
+               , stat['goal_line']['under']['4.5']['total']
+               , stat['goal_line']['under']['4.5']['percentage_total_matches']
+               , stat['goal_line']['under']['5.5']['total']
+               , stat['goal_line']['under']['5.5']['percentage_total_matches']
+               )
         cursor.execute(sql, val)
         db.commit()
         print(cursor.rowcount, ' record inserted.')
 
 
-# API ##############################################################
+def save_seasons():
+    seasons = api_get_seasons()
+    cursor = db.cursor()
+    sql = '''
+        INSERT INTO football.seasons (id, name, is_current, start, end, league_id, current_round_id, current_stage_id) VALUES
+        (%s, %s, %s, %s, %s, %s, %s, %s)
+         '''
+    for season in seasons:
+        print(season)
+        val = (season['id'], season['name'], season['is_current'], season['start'], season['end'], season['league_id'],
+               season['current_round_id'], season['current_stage_id'])
+        cursor.execute(sql, val)
+        db.commit()
+        print(cursor.rowcount, ' record inserted.')
+
+    save_season_rounds(seasons)
+
+
+def save_season_rounds(seasons):
+    cursor = db.cursor()
+    sql = '''
+            INSERT INTO football.rounds (id, season_id) VALUES (%s, %s)
+             '''
+    for season in seasons:
+        for round in season['round_ids']:
+            val = (round, season['id'])
+            cursor.execute(sql, val)
+            db.commit()
+            print(cursor.rowcount, ' record inserted.')
+
+
+def save_team_seasons():
+    teams = api_get_teams_by_season()
+    cursor = db.cursor()
+    sql = '''
+            INSERT INTO football.team_seasons (team_id, season_id) VALUES (%s, %s)
+             '''
+    for team in teams:
+        val = (team['id'], team['season_id'])
+        cursor.execute(sql, val)
+        db.commit()
+        print(cursor.rowcount, ' record inserted.')
+
+
+def save_team_squad():
+    teams = api_get_team_squad()
+    cursor = db.cursor()
+    sql = '''
+            INSERT INTO football.team_squad (player_id, number, captain, position, `order`, season_id, team_id) VALUES 
+            ( %s, %s, %s, %s, %s, %s, %s)
+             '''
+    for team in teams:
+        for player in team['squad']:
+            val = (player['player']['id'], player['number'], player['captain'], player['position'], player['order'],
+                   team['season_id'], team['team_id'])
+            cursor.execute(sql, val)
+            db.commit()
+            print(cursor.rowcount, ' record inserted.')
+
+
+def save_team_stats():
+    stats = api_get_team_stats()
+    cursor = db.cursor()
+
+    for stat in stats:
+        columns = tuple(stat.keys())
+        values = tuple(stat.values())
+        placeholders = ", ".join(["%s"] * len(stat))
+
+        sql = "INSERT INTO %s  %s VALUES  %s ;" % ('team_stats', columns, values)
+        sql = sql.replace("'", '')
+        sql = sql.replace("None", 'NULL')
+
+        cursor.execute(sql)
+        db.commit()
+        print(cursor.rowcount, ' record inserted.')
+
+
+
+# UTILITY ################################################################
 def api_call(config):
     url = base_url + config['type'] + api_user_config + config['query']
     print('Calling URL: ' + url)
@@ -539,10 +735,52 @@ def db_res_to_json(cursor):
     final = []
     for row in res:
         row_obj = {}
-        for i in range(0, len(row_headers) - 1):
+        for i in range(0, len(row_headers)):
             row_obj[row_headers[i]] = row[i]
         final.append(row_obj)
     return final
 
 
+def flatten_json(obj):
+    flattened_obj = {}
+    for (key, value) in obj.items():
+        if type(value) is dict:
+            for (subkey, subvalue) in value.items():
+                flattened_obj[clean_key(key) + '_' + clean_key(subkey)] = subvalue
+
+        else:
+            flattened_obj[clean_key(key)] = value
+
+    hasDicts = False
+    for (key, value) in flattened_obj.items():
+        if type(value) is dict:
+            hasDicts = True
+
+    if hasDicts:
+        return flatten_json(flattened_obj)
+    else:
+        return flattened_obj
+
+
+def clean_key(key):
+    key = key.replace('.', '_')
+    key = key.replace('-', '_')
+    return(key)
+
+
+def build_val_tuple(columns):
+    length = len(columns)
+    tuple_string = "("
+    for i in range(0, length+1):
+        if(i == length-1):
+            tuple_string += " %s)"
+        else:
+            tuple_string += " %s, "
+    return tuple_string
+
+save_team_stats()
+
+
 database.cnx.close()
+
+
