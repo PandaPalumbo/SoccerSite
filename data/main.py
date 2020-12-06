@@ -57,7 +57,7 @@ def api_get_players():
     players = []
     ids = []
     for country in countries:
-        for i in range(15, 25):
+        for i in range(10, 25):
             config = {
                 "type": 'players/',
                 "query": '&t=list&country_id=' + str(country['id']) + '&page=' + str(i)
@@ -204,6 +204,27 @@ def api_get_team_stats():
     print(stats)
     return stats
 
+def api_get_player_stats_by_team(team_id):
+    data = db_get_players_by_team(team_id)
+    players = data['players']
+    team = data['team']
+    stats = []
+    for player in players:
+        config = {
+            'type': 'stats/',
+            'query': '&t=player&id=' + str(player['id']) + '&season_id=' + str(team[0]['season_id'])
+        }
+        res = api_call(config)
+        if (res):
+            res['player_id'] = res['id']
+            del res['id']
+            stats.append(flatten_json(res))
+
+    with open('data.json', 'w') as outfile:
+        json.dump(stats, outfile)
+    print(stats)
+    return stats
+
 
 # DB GETTERS ####################################################
 def db_get_leagues():
@@ -248,7 +269,7 @@ def db_get_teams():
                 football.teams as team
                 INNER  JOIN
                     team_seasons ts on team.id = ts.team_id 
-                WHERE country_id != 3
+                WHERE season_id = 7194
         """
     cursor.execute(sql)
 
@@ -256,6 +277,23 @@ def db_get_teams():
     print(res)
     return res
 
+def db_get_players_by_team(team_id):
+    cursor = db.cursor()
+    args = [team_id]
+    cursor.callproc('sp_GetTeam', args)
+    proc_res = []
+    for result in cursor.stored_results():
+        proc_res.append(db_res_to_json(result))
+
+    res = {
+        "team": proc_res[0],
+        "players": proc_res[1]
+    }
+    # print(res['team'])
+    # print(res['players'])
+    with open('data.json', 'w') as outfile:
+        json.dump(res, outfile)
+    return res
 
 # SETTERS ###########################################################
 
@@ -695,7 +733,7 @@ def save_team_squad():
             db.commit()
             print(cursor.rowcount, ' record inserted.')
 
-
+##DYNAMIC
 def save_team_stats():
     stats = api_get_team_stats()
     cursor = db.cursor()
@@ -706,6 +744,27 @@ def save_team_stats():
         placeholders = ", ".join(["%s"] * len(stat))
 
         sql = "INSERT INTO %s  %s VALUES  %s ;" % ('team_stats', columns, values)
+        sql = sql.replace("'", '')
+        sql = sql.replace("None", 'NULL')
+
+        cursor.execute(sql)
+        db.commit()
+        print(cursor.rowcount, ' record inserted.')
+
+##DYNAMIC
+def save_player_stats_by_team(team_id):
+    stats = api_get_player_stats_by_team(team_id)
+    cursor = db.cursor()
+
+    for stat in stats:
+        stat['name'] = "'" + stat['name'].replace(',', "") + "'"
+        columns = tuple(stat.keys())
+        values = tuple(stat.values())
+        print('Cols length: ' + str(len(columns)))
+        print('values length: ' + str(len(values)))
+        placeholders = ", ".join(["%s"] * len(stat))
+
+        sql = "INSERT INTO %s  %s VALUES  %s ;" % ('player_stats', columns, values)
         sql = sql.replace("'", '')
         sql = sql.replace("None", 'NULL')
 
@@ -778,8 +837,10 @@ def build_val_tuple(columns):
             tuple_string += " %s, "
     return tuple_string
 
-save_team_stats()
+teams = db_get_teams()
 
+for team in teams:
+    save_player_stats_by_team(team['id'])
 
 database.cnx.close()
 
