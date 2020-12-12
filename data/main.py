@@ -212,7 +212,7 @@ def api_get_player_stats_by_team(team_id):
     for player in players:
         config = {
             'type': 'stats/',
-            'query': '&t=player&id=' + str(player['id']) + '&season_id=' + str(team[0]['season_id'])
+            'query': '&t=player&id=' + str(player['id']) + '&season_id=' + str(player['season_id'])
         }
         res = api_call(config)
         if (res):
@@ -269,7 +269,7 @@ def db_get_teams():
                 football.teams as team
                 INNER  JOIN
                     team_seasons ts on team.id = ts.team_id 
-                WHERE season_id = 7194
+                WHERE season_id = 7226
         """
     cursor.execute(sql)
 
