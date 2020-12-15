@@ -31,6 +31,14 @@ app.get('/teams', (req, res) => {
     })
 })
 
+app.get('/search/players', (req, res) => {
+    let search = req.query.search;
+    connection.query('call sp_SearchPlayers(?)', search, (err, data, fields) => {
+        if(err) throw err;
+        res.send(data[0]);
+    })
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })

@@ -157,6 +157,12 @@ export default {
           let config = buildAPIConfig(params);
           retrieve(config, data=> callback(data));
         },
+        searchPlayers:(query, callback)=>{
+            let config = buildDBConfig('search/players/?search='+query);
+            retrieve(config, (data)=>{
+                callback(data)
+            })
+        },
         
     },
     firebase: {
@@ -193,7 +199,7 @@ function buildDBConfig (params){
 function retrieve(config,cb) {
      axios(config).then(data =>{
          let res = data.data;
-         console.log(data)
+         console.log(data.data)
          cb(res);
      }).catch((e)=> console.error(e));
 }

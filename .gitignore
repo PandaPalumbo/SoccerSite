@@ -3,7 +3,7 @@ node_modules
 /dist
 
 
-# local env files
+# local .env.local files
 .env.local
 .env.*.local
 
@@ -28,3 +28,4 @@ data/chromedriver.exe
 *.exe
 package-lock.json
 /data/python/venv/
+package-lock.json

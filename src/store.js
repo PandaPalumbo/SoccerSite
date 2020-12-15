@@ -65,5 +65,14 @@ export default new Vuex.Store({
                         league['stats'] = data;
                 })
         },
+        queryPlayers({state}, {query}){
+            console.log('hit queryplayers')
+            api.getData.searchPlayers(query, (data)=> {
+
+                 console.log('hit  query players callback')
+                    state.players = data;
+                }
+            );
+        },
     }
 })
