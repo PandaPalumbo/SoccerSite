@@ -205,7 +205,7 @@ def api_get_team_stats():
     return stats
 
 def api_get_player_stats_by_team(team_id):
-    data = db_get_players_by_team(team_id)
+    data = db_get_sp_team(team_id)
     players = data['players']
     team = data['team']
     stats = []
@@ -277,7 +277,7 @@ def db_get_teams():
     print(res)
     return res
 
-def db_get_players_by_team(team_id):
+def db_get_sp_team(team_id):
     cursor = db.cursor()
     args = [team_id]
     cursor.callproc('sp_GetTeam', args)

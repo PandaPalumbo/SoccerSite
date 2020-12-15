@@ -26,3 +26,5 @@ pnpm-debug.log*
 .env
 data/chromedriver.exe
 *.exe
+package-lock.json
+/data/python/venv/

@@ -21,8 +21,8 @@ export default {
                     type: 'leagues',
                     query: '&t=list&page=1'
                 }
-            let config = this.buildConfig(params);
-            getData(config, data => {
+            let config = this.buildAPIConfig(params);
+            retrieve(config, data => {
                 let leagues = data.data;
                 leagues.map(league => {
                     db.collection('competitions').doc(league.id).set(league);
@@ -44,9 +44,9 @@ export default {
                         query: '&t=byseason&season_id='
                     }
                 params.query += data.current_season_id;
-                let config = this.buildConfig(params);
+                let config = this.buildAPIConfig(params);
                 setTimeout(
-                    getData(config, teams => {
+                    retrieve(config, teams => {
                         teams.data.map(team => db.collection('teams').doc(team.name).set(team))
                     }),
                 2000)
@@ -68,8 +68,8 @@ export default {
                                 }
                             console.log(league)
                             params.query += league.current_season_id;
-                            let config = this.buildConfig(params);
-                            getData(config, (data)=>{
+                            let config = this.buildAPIConfig(params);
+                            retrieve(config, (data)=>{
                                 let fixtures = data.data;
                                 console.log(fixtures);
                                 fixtures.map(fixture => {
@@ -91,9 +91,9 @@ export default {
                         query: '&t=league&id='
                     }
                 params.query += id;
-                let config = this.buildConfig(params);
+                let config = this.buildAPIConfig(params);
                 setTimeout(function(){
-                    getData(config, data => {
+                    retrieve(config, data => {
                         let stats = data.data;
                         console.log(stats)
                     })
@@ -107,14 +107,14 @@ export default {
                 query: 't=info&country_id='
             }
             params.query += '25'
-            let config = this.buildConfig(params);
-            getData(config, data=>{
+            let config = this.buildAPIConfig(params);
+            retrieve(config, data=>{
                 let players = data.data;
                 console.log(players);
             })
         },
         //building the url for the config
-        buildConfig : (params) =>{
+        buildAPIConfig : (params) =>{
             let config = {};
             const baseConfig = {
                 method: 'get',
@@ -144,27 +144,20 @@ export default {
                 .catch(e => console.error(e));
         },
         getTeams:(callback)=>{
-            let retArr = [];
-            db.collection('teams').where('country_id', '!=', '-1').get()
-                .then((teams =>{
-                    teams.forEach(team =>{
-                        let data = team.data();
-                        retArr.push(data)
-                    })
-                }))
-                .then(()=>{
-                    callback(retArr);
-                })
-                .catch(e => console.error(e));
+           let config = buildDBConfig('teams');
+           retrieve(config, (data)=>{
+               callback(data)
+           })
         },
         getLeagueStats:(id, callback) =>{
           let params = {
               type: 'stats',
               query: '&t=league&id='+id,
           }
-          let config = buildConfig(params);
-          getData(config, data=> callback(data));
+          let config = buildAPIConfig(params);
+          retrieve(config, data=> callback(data));
         },
+        
     },
     firebase: {
         init() {
@@ -173,7 +166,7 @@ export default {
         },
     },
 }
-function buildConfig (params){
+function buildAPIConfig (params){
     let config = {};
     const baseConfig = {
         method: 'get',
@@ -186,8 +179,18 @@ function buildConfig (params){
         config.url += params.query;
     return config
 }
+
+function buildDBConfig (params){
+    const config = {
+        method: 'get',
+        url: 'http://localhost:3000/'+params,
+        headers:{}
+    };
+    return config;
+}
+
 //gets data given the proper config
-function getData(config,cb) {
+function retrieve(config,cb) {
      axios(config).then(data =>{
          let res = data.data;
          console.log(data)

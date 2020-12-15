@@ -20,7 +20,7 @@ name: "PlayGround.vue",
   },
   methods:{
     test(){
-      api.saveData.savePlayers(data => console.log(data));
+      api.getData.getTeams((data) => console.log(data))
     }
   },
 }
