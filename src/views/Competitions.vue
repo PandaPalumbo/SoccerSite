@@ -15,7 +15,7 @@
           </b-row>
         </b-col>
         <b-col>
-          <SelectedPill v-for="(league) in selectedLeagues" :key="league.id" :data="league" :label="league.name" variant="danger"/>
+          <SelectedPill type="leagues" v-for="(league) in selectedLeagues" :key="league.id" :data="league" :label="league.name" variant="danger"/>
         </b-col>
       </b-row>
       <b-row v-if="showAlert" class="alert alert-warning mx-auto mt-2">

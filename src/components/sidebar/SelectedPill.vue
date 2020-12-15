@@ -13,6 +13,10 @@ export default {
       type: Object,
       required: true,
     },
+    type:{
+      type: String,
+      required: true,
+    },
     label:{
       type: String,
       required: true,
@@ -25,7 +29,7 @@ export default {
   methods:{
     toggle(){
       this.$store.commit('updateSelected',{
-        type:'leagues',
+        type:this.type,
         add:false,
         value:this.data,
       })

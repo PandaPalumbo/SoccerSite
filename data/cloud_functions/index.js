@@ -33,10 +33,15 @@ app.get('/teams', (req, res) => {
 
 app.get('/search/players', (req, res) => {
     let search = req.query.search;
-    connection.query('call sp_SearchPlayers(?)', search, (err, data, fields) => {
-        if(err) throw err;
-        res.send(data[0]);
-    })
+    if(search)
+        connection.query('call sp_SearchPlayers(?)', search, (err, result, fields) => {
+            if(err) throw err;
+            let data = result[0];
+            console.log(data)
+            res.send(data);
+        })
+    else
+        res.send('No player name sent...')
 })
 
 app.listen(port, () => {
