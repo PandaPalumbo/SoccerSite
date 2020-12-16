@@ -36,7 +36,7 @@ export default new Vuex.Store({
 
                 else
                     target = values;
-                console.log(target)
+                console.log(value)
             } else if (clear) {
                 target = [];
             } else {

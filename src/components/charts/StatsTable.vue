@@ -12,11 +12,19 @@
       <tbody>
       <tr v-if="data['total'] != undefined">
         <th scope="row">Total</th>
-        <td>{{data.total}}</td>
+        <td>{{data.total? data.total : 0}}</td>
       </tr>
       <tr v-if="data['avg_per_match'] != undefined">
         <th scope="row">Per Match</th>
-        <td>{{data.avg_per_match}}</td>
+        <td>{{data.avg_per_match ? data.avg_per_match : 0}}</td>
+      </tr>
+      <tr v-if="data['avg'] != undefined">
+        <th scope="row">Chance Per Match</th>
+        <td>{{data.avg ? (data.avg).toFixed(2) : 0}}%</td>
+      </tr>
+      <tr v-if="data['avg_calc'] != undefined">
+        <th scope="row">Per Match</th>
+        <td>{{ data.avg_calc ? (data.avg_calc).toFixed(2) : 0}}</td>
       </tr>
       <tr v-if="data['avg_every_minutes'] != undefined">
         <th scope="row">Minutes Per</th>
@@ -56,7 +64,7 @@ props:{
       let keys = Object.keys(this.data);
       let areAnyZero = false
       keys.forEach(key =>{
-        if(this.data[key] == 0)
+        if(!this.data[key])
           areAnyZero = true;
         return areAnyZero
       })

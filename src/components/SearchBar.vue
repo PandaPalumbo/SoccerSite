@@ -4,24 +4,23 @@
         type="search"
         placeholder="Type player name to search..."
         v-model="searchValue"
-        @focusin="focused = true"
-        @focusout="focused = false"
+        @focus="focused = true"
+        @blur="focused = false"
         @keyup.up="onArrowKey('up')"
         @keyup.down="onArrowKey('down')"
-        @keyup.enter="onEnter"
+        @keyup.enter="search"
+        @update="(value) => search(value)"
         @change="(value) => search(value)"
+        @cancel="focused = false"
     />
-    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions">
+    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue">
       <div v-for="(item, i) in suggestions.slice(0, 10)" :key="i" >
         <b-list-group-item class="py-2" href="#"
                            @mousedown.stop="addSelectedValue(item)" variant="dark">
           <b-row class="d-flex w-100 p-0 m-0">
             <b-col cols="1">
-              <img v-if="item.img" class="league-img bg-light"
-                   :src="item.img"/>
-              <img v-else-if="item.team_id"
-                   :src="'https://cdn.soccersapi.com/images/soccer/teams/50/'+item.team_id+'.png'"
-              />
+              <img class="league-img bg-light" @error="(e) => altImage(e, item)"
+                   :src="'https://cdn.soccersapi.com/images/soccer/players/50/'+item.id+'.png'"/>
             </b-col>
             <b-col cols="10" class="p-0 m-0">
               <p class="p-0 m-0">
@@ -117,6 +116,10 @@ export default {
           query: val
         })
       }
+    },
+    altImage(e, item) {
+      console.log(e)
+      e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/50/' + item.team_id + '.png'
     },
   },
 }

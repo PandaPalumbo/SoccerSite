@@ -16,7 +16,9 @@ const connection =  mysql.createConnection({
 
 
 
-connection.connect(()=> console.log('connected!'))
+connection.connect((err)=> {
+    if (err) throw err
+})
 
 app.get('/', (req, res) => {
     res.send('Hello world')
