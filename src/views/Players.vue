@@ -16,7 +16,7 @@
       <b-tabs active-nav-item-class="bg-light-dark text-light " class="bg-dark rounded p-1">
         <b-tab title-link-class="font-weight-bold text-light" v-for="(player, i) in selectedPlayers" :key="i"
                :title="(player.common_name.split(',')[1] ? player.common_name.split(',')[1] : ' ') + ' ' + player.common_name.split(',')[0]">
-          <Player :data="player" />
+          <PlayerDashboard :data="player" />
         </b-tab>
       </b-tabs>
     </b-col>
@@ -31,12 +31,12 @@
 <script>
 import SearchBar from "@/components/SearchBar";
 import SelectedPill from "@/components/sidebar/SelectedPill";
-import Player from "@/components/player/Player";
+import PlayerDashboard from "@/components/player/PlayerDashboard";
 import {mapState} from 'vuex';
 
 export default {
 name: "Players.vue",
-  components:{SearchBar, SelectedPill, Player},
+  components:{SearchBar, SelectedPill, PlayerDashboard},
   computed:{
     ...mapState({
       selectedPlayers: state => state.selected.players,

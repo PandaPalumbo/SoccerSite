@@ -5,8 +5,11 @@
         <template #header>
           <b-row class="border-bottom border-light-gray border-rounded">
             <b-col cols="2">
-              <img @error="altImage" class="player-img bg-light"
-                   :src="'https://cdn.soccersapi.com/images/soccer/players/100/'+data.id+'.png'"/>
+              <div class="w-100 h-100">
+                <img @error="altImage" class="player-img bg-light"
+                     :src="'https://cdn.soccersapi.com/images/soccer/players/100/'+data.id+'.png'"/>
+              </div>
+
             </b-col>
             <b-col cols="10">
               <p>{{ data.firstname + " " + data.lastname }}</p>
@@ -193,7 +196,12 @@ export default {
   margin: auto;
 }
 .player-img{
-  width:150px;
-  height:150px;
+  width:65%;
+  height:65%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: block !important;
 }
 </style>
