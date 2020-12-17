@@ -20,7 +20,7 @@
       </tr>
       <tr v-if="data['avg'] != undefined">
         <th scope="row">Chance Per Match</th>
-        <td>{{data.avg ? (data.avg).toFixed(2) : 0}}%</td>
+        <td>{{data.avg ? data.avg : 0}}%</td>
       </tr>
       <tr v-if="data['avg_calc'] != undefined">
         <th scope="row">Per Match</th>

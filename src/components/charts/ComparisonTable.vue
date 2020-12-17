@@ -1,55 +1,27 @@
 <template>
-  <b-col class="mx-auto my-1" cols="11" v-if="subKeys">
-
-    <div v-for="(tableName, i) in statlabels" :key="i">
-      <table v-if="tableName != 'name'" class="table table-striped table-dark table-bordered">
-        <thead>
-        <tr>
-          <th :class="['text-center']" :colspan="subKeys.length + 1">{{tableName == 'yellowred' ? 'Red - Double Yellow' : prettyCasing(tableName) }}</th>
-        </tr>
-        <tr>
-          <th v-for="(key, x) in subKeys" :key="x">{{prettyCasing(key)}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr  v-for="(stats, x) in wantedStats" :key="x">
-          <td v-for="(key, y) in subKeys" :key="y">
-            {{dataField == 'clean_sheets' && key == 'avg_per_match' ?parseFloat(stats[tableName][key]/100).toFixed(2) : stats[tableName][key]}}
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+  <b-col class="mx-auto my-1 text-center" cols="11" v-if="subKeys">
+    <b-row v-for="(key, i) in subKeys" :key="i">
+      <ComparisonTable :data="subTableData" :data-field="key"/>
+    </b-row>
   </b-col>
   <b-col class="mx-auto my-1" cols="11" v-else>
-<!--    <ComparisonBars  :dataset="barData" :labels="wantedStats.map(stat => stat['name'])"/>-->
-    <table class="table table-striped table-dark">
-      <thead>
-      <tr>
-        <th :colspan="statlabels.length + 1" class="text-center">{{prettyCasing(dataField)}}</th>
-      </tr>
-      <tr>
-        <th v-for="(label,i) in statlabels" :key="i">
-          {{prettyCasing(label)}} <span class="text-warning" v-show="wantedStats.some(stat => stat[label] == 0)">*</span>
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(stats,i) in wantedStats" :key="i">
-          <td v-for="(label,x) in statlabels" :key="x">
-            {{label === 'avg_every_minutes' ? parseFloat(90/stats['avg_per_match']).toFixed(2) : stats[label]}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <span class="text-warning" > * Values of 0 may be incomplete data</span>
+    <b-table striped table-variant="dark" :items="tableItems" :fields="tableFields">
+      <template #thead-top>
+        <b-tr>
+          <h2 v-if="dataField == 'over'">{{dataField}}</h2>
+          <b-th style="font-size: 2em;" class="text-center" :colspan="tableFields.length" variant="dark">
+            {{ dataField == 'yellowred' ? 'Red Card - Double Yellow' : dataField == 'redcards' ? 'Straight Red' : prettyCasing(dataField)  }}
+          </b-th>
+        </b-tr>
+      </template>
+    </b-table>
   </b-col>
 </template>
 
 <script>
 export default {
   name: "ComparisonTable",
-  components:{},
+  components: {},
   props: {
     data: {
       type: Array,
@@ -58,53 +30,68 @@ export default {
     dataField: {
       type: String,
       required: true,
-    }
+    },
+    type: {type:String, required:false}
   },
   computed: {
-    wantedStats() {
-      let stats = this.data.map(league => {
-        if(league.stats[this.dataField]['avg_per_match'] !== undefined) {
-          league.stats[this.dataField]['name'] = league.country_name + ' - ' + league.name;
-        }
-        else{
-          let keys = Object.keys(league.stats[this.dataField]);
-          keys.map(key => league.stats[this.dataField][key]['name'] = league.country_name +' - ' + league.name)
-        }
-        return league.stats[this.dataField]
-      });
-      return stats;
-    },
-    statlabels(){
-      let stats = this.wantedStats;
-      let keys = Object.keys(stats[0]);
-      keys.sort((a,b) => {
-        if(a=='name' && b != a)
-          return -1
-      })
-      return keys;
-    },
     subKeys() {
-      let stats = this.wantedStats;
-      let subkeys = Object.keys(stats[0]);
-      if (typeof stats[0][subkeys[0]] == 'object') {
-        let keys = Object.keys(stats[0][subkeys[0]])
-        keys.sort((a,b) => {
-          if(a=='name' && b != a)
-            return -1
-        })
-        return keys;
-      }
-      else
+      let stats = this.data[0]
+      let data = stats[this.dataField];
+      let keys = Object.keys(data);
+      if (keys.some(key => typeof data[key] === 'object')) {
+        return keys.filter(key => typeof data[key] === 'object')
+      } else
         return null;
     },
-    barData(){
-      return this.wantedStats.map(stat=> ({
-        data:[stat.total, stat.avg_per_match]
-      }))
+    tableFields() {
+      let stats = this.data[0][this.dataField];
+      let fields = Object.keys(stats);
+
+      let finalFields = fields.map(field => ({
+            key: field,
+            label: field  == 'avg' && this.type != 'leagues' ? 'Percent Chance ' : this.prettyCasing(field),
+            sortable: true,
+          })
+      );
+      finalFields.push({
+        key: 'name',
+        label: 'Name',
+        sortable: true,
+      })
+      if(this.type == 'leagues')
+        finalFields = finalFields.filter(field => field.key != 'avg')
+      return finalFields.sort((a, b) => {
+            if (a.key == 'name' && b.key != a.key)
+              return -1
+          }
+      );
 
     },
+    tableItems() {
+      let stats = this.data;
+      // console.log(this.data)
+      let items = [];
+      stats.forEach((stat) => {
+        let item = stat[this.dataField];
+        if(item.avg)
+          item['avg'] = (''+ item['avg']).replace('%', '') + '%'
+        item['name'] = this.fixName(stat.name);
+        items.push(item)
+      })
+      return items;
+
+    },
+    subTableData() {
+      let subData = [];
+      this.data.forEach(stat => {
+        let tempObj = stat[this.dataField];
+        tempObj['name'] = stat.name;
+        subData.push(tempObj)
+      })
+      return subData;
+    },
   },
-  methods:{
+  methods: {
     prettyCasing(string) {
       let splitString = string.split('_');
       let res = "";
@@ -113,6 +100,11 @@ export default {
         res += string + " "
       })
       return res;
+    },
+    fixName(name) {
+      let split = name.split(' ')
+      let retName = split[1] ? split[1] + ' ' + split[0] : split[0];
+      return retName;
     },
   },
   mounted() {

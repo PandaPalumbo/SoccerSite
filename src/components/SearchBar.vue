@@ -1,7 +1,7 @@
 <template>
   <div class="position-relative w-100">
     <b-form-input
-        type="search"
+
         placeholder="Type player name to search..."
         v-model="searchValue"
         @focus="focused = true"

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import Competitions from './views/Competitions.vue'
+import Leagues from './views/Leagues.vue'
 import Teams from "@/views/Teams";
 import Players from "@/views/Players";
 import Seasons from "@/views/Seasons";
@@ -20,7 +20,7 @@ export default new Router({
     },
     {
       path: '/competitions/',
-      component: Competitions,
+      component: Leagues,
     },
     {
       path: '/teams/',

@@ -53,7 +53,7 @@ import League from "@/components/league/League";
 import LeagueComparison from "@/components/league/LeagueComparison";
 
 export default {
-  name: "Competitions.vue",
+  name: "Leagues.vue",
   components: {
     LeagueComparison,
     SidebarRow, SelectedPill, League

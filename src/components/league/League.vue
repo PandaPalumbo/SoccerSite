@@ -12,7 +12,6 @@
         <template v-if="stats" #lead>
           <p>{{ 'Matches Played: ' + stats.number_of_matches_played + '/' + stats.number_of_matches }}</p>
           <p>{{ 'Teams : ' + stats.number_of_teams }}</p>
-          <p>{{ 'Teams : ' + stats.number_of_teams }}</p>
         </template>
         <template #lead v-else>
           <b-row class="justify-content-center">

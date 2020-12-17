@@ -29,11 +29,11 @@
                v-for="(key, i) in this.tabLabels"
                :key="Math.random() * i"
                :title="prettyCasing(key)"
+               v-show="key != 'goal_line'"
         >
 <!--          for each data point make a table of points-->
-<!--          todo use boostrap table for comparison-->
-          <b-row class="m-2 bg-light-dark text-light">
-            <ComparisonTable :data="leaguesWithStats" :data-field="key"/>
+          <b-row class="m-2 bg-light-dark text-light" >
+            <ComparisonTable type="leagues" :data="leaguesWithStats" :data-field="key"/>
           </b-row>
 
         </b-tab>
@@ -95,11 +95,13 @@ export default {
         if(!league.stats) {
           this.getStats(league.id, data => {
             tempLeague['stats'] = data;
-            this.leaguesWithStats.push(tempLeague);
+            tempLeague['stats']['name'] = league.name;
+            this.leaguesWithStats.push(tempLeague['stats']);
             this.getTabLables();
           })
         }else {
-          this.leaguesWithStats.push(tempLeague);
+          tempLeague['stats']['name'] = league.name;
+          this.leaguesWithStats.push(tempLeague['stats']);
           this.getTabLables();
         }
       })
@@ -107,10 +109,10 @@ export default {
     //just gets labels for the comparison data tabs (ie: assists, subs, goals)
     getTabLables() {
       if (this.leaguesWithStats.length > 1) {
-        let keys = Object.keys(this.leaguesWithStats[0]['stats']);
-        let stats = this.leaguesWithStats[0]['stats'];
-        let labels = keys.filter(key => key != 'player_most_scored' && key != 'team_most_scored' && key != 'goal_line' && typeof stats[key] != 'number').map(key => key);
-        this.tabLabels = labels;
+        let stats = this.leaguesWithStats[0];
+        let keys = Object.keys(this.leaguesWithStats[0]);
+        let finalKeys = keys.filter(key => typeof stats[key] === 'object' && key != 'team_most_scored' && key != 'player_most_scored' && key != 'goal_line')
+        this.tabLabels = finalKeys;
       }
     },
   },
