@@ -1,5 +1,7 @@
 <template>
+<!--  Main Containter-->
   <div class="mx-4">
+<!--    Header Container-->
     <b-row class="league-cont">
       <b-jumbotron bg-variant="dark" text-variant="light" class="w-100 mt-1">
         <template #header>
@@ -19,6 +21,8 @@
         </template>
       </b-jumbotron>
     </b-row>
+<!--    Data container-->
+<!--    -->
     <b-row v-if="leaguesWithStats.length > 1 && tabLabels" class="bg-light-dark p-1 mb-2 rounded">
       <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab  bg-dark">
         <b-tab title-link-class="text-light  font-weight-bold"
@@ -26,6 +30,8 @@
                :key="Math.random() * i"
                :title="prettyCasing(key)"
         >
+<!--          for each data point make a table of points-->
+<!--          todo use boostrap table for comparison-->
           <b-row class="m-2 bg-light-dark text-light">
             <ComparisonTable :data="leaguesWithStats" :data-field="key"/>
           </b-row>
@@ -33,6 +39,7 @@
         </b-tab>
       </b-tabs>
     </b-row>
+<!--    if no data show loading-->
     <b-row class="justify-content-center" v-else>
       <b-spinner variant="light"></b-spinner>
     </b-row>
@@ -81,6 +88,7 @@ export default {
     getColor() {
       return this.$randomColor({luminosity: 'bright'}).toString();
     },
+    //if no stats, load stats, if stats, push to array, then get the lables from stats.
     getAllStats() {
       this.selectedLeagues.forEach(league => {
         let tempLeague = league;
@@ -96,6 +104,7 @@ export default {
         }
       })
     },
+    //just gets labels for the comparison data tabs (ie: assists, subs, goals)
     getTabLables() {
       if (this.leaguesWithStats.length > 1) {
         let keys = Object.keys(this.leaguesWithStats[0]['stats']);

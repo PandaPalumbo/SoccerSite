@@ -4,11 +4,15 @@ import firebase from 'firebase';
 
 //base url stuff for https://soccersapi.com/page/documentation
 //https://documenter.getpostman.com/view/11399692/SztA99ag?version=latest#dd5b9f84-354e-46b5-8479-227bf8a98573
+
+//API Username and token saved to .env file
 const user = process.env.VUE_APP_USER
 const token = process.env.VUE_APP_TOKEN
+
+// the base url for the api,
+// and the user/token query params that need to be tacked on after our type is added to base url
 const baseQuery = '?user=' + user + '&token=' + token;
 const baseUrl = 'https://api.soccersapi.com/v2.2/'
-//basic axios config
 
 
 let db = null;
@@ -129,6 +133,7 @@ export default {
         },
     },
     getData: {
+        //TODO hook up with cloud sql instead of firebase
         getLeagues:(callback)=>{
             let retArr = [];
             db.collection('competitions').where('is_amateur', '==', '0').get()
@@ -143,12 +148,14 @@ export default {
                 })
                 .catch(e => console.error(e));
         },
+        //gets teams from cloud sql
         getTeams:(callback)=>{
            let config = buildDBConfig('teams');
            retrieve(config, (data)=>{
                callback(data)
            })
         },
+        //TODO hook up with cloud sql
         getLeagueStats:(id, callback) =>{
           let params = {
               type: 'stats',
@@ -157,6 +164,7 @@ export default {
           let config = buildAPIConfig(params);
           retrieve(config, data=> callback(data));
         },
+        //hits the endpoint that retrieves players given a name
         searchPlayers:(query, callback)=>{
             let config = buildDBConfig('search/players/?search='+query);
             retrieve(config, (data)=>{
@@ -166,6 +174,7 @@ export default {
         
     },
     firebase: {
+        //gets firebase started for the app
         init() {
             firebase.initializeApp(fbConfig.config)
             db = firebase.firestore();
@@ -174,18 +183,22 @@ export default {
 }
 function buildAPIConfig (params){
     let config = {};
+    //this is the basic structure of the JSON passed to axios to fetch data
     const baseConfig = {
         method: 'get',
         url: baseUrl,
         headers: {}
     };
     config = baseConfig;
+    //tacking on our API query type (ex: players, teams, stats, etc..)
+    //then adds our user info, and if there are any specific query params passed to function, add those at the end
     config.url += params.type + '/' + baseQuery
     if (params.query)
         config.url += params.query;
     return config
 }
 
+//same as above, but configured to hit our cloud sql with endpoint url baked in already.
 function buildDBConfig (params){
     const config = {
         method: 'get',
@@ -196,6 +209,7 @@ function buildDBConfig (params){
 }
 
 //gets data given the proper config
+//works for both api calls and cloud sql calls
 function retrieve(config,cb) {
      axios(config).then(data =>{
          let res = data.data;

@@ -26,6 +26,6 @@ new Vue({
   store,
   render: h => h(App),
   created() {
-    store.dispatch('initial')
+    store.dispatch('initial') //gets Team and League Id's
   },
 }).$mount('#app');

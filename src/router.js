@@ -10,6 +10,8 @@ import Playground from "@/views/Playground";
 Vue.use(Router)
 
 export default new Router({
+  //sets up the routes after localhost:8000, or future website name (ie: www.footballvisuals.com/players)
+  //these components live in the 'src/views' folder from the root.
   routes: [
     {
       path: '/',

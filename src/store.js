@@ -27,6 +27,8 @@ export default new Vuex.Store({
     },
     getters: {},
     mutations: {
+        //updates a 'selected' array given a particular type ie: teams, leagues, players, seasons...
+        //add single value or many values, or clears the selected array
         updateSelected(state, {type, add, value, values, clear}) {
             let target = state.selected[type];
             const pos = target.indexOf(value);
@@ -40,12 +42,13 @@ export default new Vuex.Store({
             } else if (clear) {
                 target = [];
             } else {
-
                 target.splice(pos, 1);
             }
         },
     },
     actions: {
+        //TODO hit cloud endpoints instead of firebase
+        //Initializes firebase, then gets all the league and team ids to use for later.
         initial({state}) {
             state.loaded = true;
             api.firebase.init();
@@ -58,18 +61,25 @@ export default new Vuex.Store({
                     state.teams = data;
             });
         },
+        //TODO write update function that updates cloud for all users, when data becomes old for a single user
+        //ex (User A gets stats, stats say next match wsa yesterday, means stats are old
+        // app then hits API for new stats, renders new stats, and in background updates DB for all other users.)
         updateSelectedStatistics({state}, {type, id, data}) {
-            if (type === 'leagues' && state.selected.leagues.some(league => league.id == id))
+            if (type === 'leagues' && state.selected.leagues.some(league => league.id == id)) {
+                //update the stats in the selected leagues and the pool of leagues, to prevent hitting api/cloud again.
                 state.selected.leagues.forEach(league => {
                     if (league.id === id)
                         league['stats'] = data;
                 })
+                state.leagues.forEach(league => {
+                    if (league.id === id)
+                        league['stats'] = data;
+                })
+            }
         },
+        // takes in name of player and searches DB
         queryPlayers({state}, {query}) {
-            console.log('hit queryplayers')
             api.getData.searchPlayers(query, (data) => {
-
-                    console.log('hit  query players callback')
                     state.players = data;
                 }
             );
