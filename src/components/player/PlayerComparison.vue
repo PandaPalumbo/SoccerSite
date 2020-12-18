@@ -7,7 +7,7 @@
         <template v-if="names" #lead>
           <!-- Radar   -->
           <b-row v-if="selectedPlayers.length > 1" class="w-100 h-100">
-            <Radar  style="width: 50%; height: 50%; margin:auto;"  :data="radarStats.datasets" :labels="radarStats.lables"/>
+            <Radar  style="width: 33%; height: 33%; margin:auto;"  :data="radarStats.datasets" :labels="radarStats.lables"/>
           </b-row>
         </template>
         <template #lead v-else>
@@ -78,9 +78,7 @@ export default {
       let lables = [
         'Assists/Game',
         'Goals/Game',
-        'Cards',
-        'Subs In/Game',
-        'Subs Out/Game',
+        'Cards/Game',
         'Shots on Target/Game',
         'Shots off Target/Game',
         'Shots blocked Target/Game',
@@ -97,8 +95,7 @@ export default {
             (player.assists.total ? player.assists.total : 0) / matches,
             (player.goals.total ? player.goals.total : 0) / matches,
             ((player.cards.yellow.total ? player.cards.yellow.total : 0) + (player.cards.yellowred.total ? player.cards.yellowred.total : 0) + (player.cards.redcards.total ? player.cards.redcards.total : 0) )/ matches,
-            (player.substitutions.in.total ? player.substitutions.in.total : 0) / matches,
-            (player.substitutions.out.total ? player.substitutions.out.total : 0) / matches,
+
             (player.shots.on_target.total ? player.shots.on_target.total : 0) / matches,
             (player.shots.off_target.total ? player.shots.off_target.total : 0) / matches,
             (player.shots.blocked.total ? player.shots.blocked.total : 0) / matches,
