@@ -110,15 +110,15 @@ export default {
       this.search(val)
     },
     search(val) {
-      if (val.length > 4) {
-        console.log('hit componenet search method')
+      if (val.length >= 4) {
+        //console.log('hit componenet search method')
         this.$store.dispatch('queryPlayers', {
           query: val
         })
       }
     },
     altImage(e, item) {
-      console.log(e)
+      //console.log(e)
       e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/50/' + item.team_id + '.png'
     },
   },

@@ -72,10 +72,10 @@ export default {
       // console.log(this.data)
       let items = [];
       stats.forEach((stat) => {
+       // console.log(stat.name)
         let item = stat[this.dataField];
-        if(item.avg)
-          item['avg'] = (''+ item['avg']).replace('%', '') + '%'
-        item['name'] = this.fixName(stat.name);
+
+        item['name'] = stat.name;
         items.push(item)
       })
       return items;
@@ -85,7 +85,7 @@ export default {
       let subData = [];
       this.data.forEach(stat => {
         let tempObj = stat[this.dataField];
-        tempObj['name'] = stat.name;
+        tempObj['name'] = stat.name
         subData.push(tempObj)
       })
       return subData;

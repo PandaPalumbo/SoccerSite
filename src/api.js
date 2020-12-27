@@ -171,8 +171,8 @@ export default {
         searchPlayers:(query, callback)=>{
             let config = buildDBConfig('search/players/?search='+query);
             retrieve(config, (data)=>{
-                let cleanedData = data.map(player => cleanPlayerData(player));
-                callback(cleanedData)
+
+                callback(data);
             })
         },
         
@@ -217,75 +217,10 @@ function buildDBConfig (params){
 function retrieve(config,cb) {
      axios(config).then(data =>{
          let res = data.data;
-         console.log(data.data)
+         // console.log(data.data)
          cb(res);
      }).catch((e)=> console.error(e));
 }
-function cleanPlayerData(data){
-    let obj = {
-        'assists':{
-            'total': data['assists_total'] ? data['assists_total'] : 0,
-            'avg': data['assists_avg'] ? data['assists_avg'] : 0,
-        },
-        'penalties':{
-            'total': data['penalties_total'] ? data['penalties_total'] : 0,
-            'avg': data['penalties_avg'] ? data['penalties_avg'] : 0,
-        },
-        'offsides':{
-            'total': data['offsides_total'] ? data['offsides_total'] : 0,
-            'avg': data['offsides_avg'] ? data['offsides_avg'] : 0,
-        },
-        'substitutions':{
-            'in':{
-                'total': data['substitutions_in_total'] ? data['substitutions_in_total'] : 0,
-                'avg': data['substitutions_in_avg'] ? data['substitutions_in_avg'] : 0,
-            },
-            'out':{
-                'total': data['substitutions_in_total'] ? data['substitutions_in_total'] : 0,
-                'avg': data['substitutions_in_avg'] ? data['substitutions_in_avg'] : 0,
-            }
-        },
-        'cards':{
-            'yellow':{
-                'total': data['cards_yellow_total'] ? data['cards_yellow_total'] : 0,
-                'avg': data['cards_yellow_avg'] ? data['cards_yellow_avg'] : 0
-            },
-            'yellowred':{
-                'total': data['cards_yellowred_total'] ? data['cards_yellowred_total'] : 0,
-                'avg': data['cards_yellowred_avg'] ? data['cards_yellowred_avg'] : 0,
-            },
-            'redcards':{
-                'total': data['cards_redcards_total'] ? data['cards_redcards_total'] : 0,
-                'avg': data['cards_redcards_avg'] ? data['cards_redcards_avg'] : 0,
-            },
-        },
-        'goals':{
-            'total': data['goals_total'] ? data['goals_total'] : 0,
-            'avg': data['goals_avg'] ? data['goals_avg'] : 0,
-        },
-        'shots':{
-            'total': data['shots_total'] ? data['shots_total'] : 0,
-            'avg_calc':(data['shots_total'] ? data['shots_total'] : 0)/data['matches_played_total'],
-            'on_target':{
-                'total': data['shots_on_target_total'] ? data['shots_on_target_total'] : 0,
-                'avg': data['shots_on_target_avg'] ? '' + data['shots_on_target_avg']: 0,
-            },
-            'off_target':{
-                'total': data['shots_off_target_total'] ? data['shots_off_target_total'] : 0,
-                'avg': data['shots_off_target_avg'] ? data['shots_off_target_avg'] : 0,
-            },
-            'blocked':{
-                'total': data['shots_blocked_total'] ? data['shots_blocked_total'] : 0,
-                'avg': data['shots_blocked_avg'] ? data['shots_blocked_avg'] : 0,
-            },
-        },
-        'corners':{
-            'total': data['corners_total'] ? data['corners_total'] : 0 ,
-            'avg': data['corners_avg'] ? data['corners_avg'] : 0,
-        },
-    }
-    data['stats'] = obj;
-    return data;
-}
+
 
 
