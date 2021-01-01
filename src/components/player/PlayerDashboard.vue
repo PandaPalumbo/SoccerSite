@@ -33,7 +33,7 @@
               <p>Number: {{  data.lineups.data[0].number }}</p>
               <p>{{ 'Matches Played: ' + currentStats.appearences }}</p>
               <p>{{ 'Weight : ' + data.weight + ", " + calculatePounds(data.weight) + ' lbs' }}</p>
-              <p>{{ 'Goals: ' + currentStats.goals }}</p>
+              <p>{{ 'Goals: ' + currentStats.goals + ' '}}<span class="text-warning">*</span></p>
             </b-col>
             <b-col cols="6">
               <p>{{ 'Age : ' + calculateAge(data.birthdate) }}</p>
@@ -43,8 +43,9 @@
               </p>
               <p>{{ 'Birthday : ' + data.birthdate }}</p>
               <p>{{ 'Height : ' + data.height + ', ' + calculateFeetInchecs(data.height) }}</p>
-              <p>{{ 'Assists: ' + currentStats.assists  }}</p>
+              <p>{{ 'Assists: ' + currentStats.assists + ' '  }}<span class="text-warning">*</span></p>
             </b-col>
+            <p class="text-warning">* This seasons stats.</p>
           </b-row>
         </template>
         <template #lead v-else>
@@ -75,9 +76,26 @@ export default {
   },
   computed: {
     currentStats(){
-      let stats = this.data.stats.data;
-      stats = stats.filter(stat => stat.season_id === this.data.team.data.current_season_id)[0]
-      return api.util.flattenJson(stats)
+      let stats = this.data.stats.data.filter(stat=> stat.season.data.is_current_season);
+      stats = stats.map(stat => api.util.flattenJson(stat))
+      let keys = Object.keys(stats[0]);
+      let combinedStats = {}
+      keys.forEach(key => {
+        combinedStats[key] = 0;
+        stats.forEach(stat => {
+          if(key == 'rating'){
+            combinedStats[key] += parseFloat(stat[key])
+          } else{
+            combinedStats[key] += stat[key]
+          }
+
+        })
+
+      })
+      combinedStats['rating'] = (combinedStats['rating']/stats.length).toFixed(2)
+      combinedStats['passes_accuracy'] = (combinedStats['passes_accuracy']/stats.length).toFixed(2)
+      console.log(combinedStats);
+      return combinedStats;
     },
   },
   data() {
@@ -138,8 +156,8 @@ export default {
 }
 
 .player-img {
-  width: 65%;
-  height: 65%;
+  width: 200px;
+  height: 200px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;

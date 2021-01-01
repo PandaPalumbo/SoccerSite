@@ -32,9 +32,9 @@
                v-show="key != 'goal_line'"
         >
 <!--          for each data point make a table of points-->
-          <b-row class="m-2 bg-light-dark text-light" >
-            <ComparisonTable type="leagues" :data="leaguesWithStats" :data-field="key"/>
-          </b-row>
+<!--          <b-row class="m-2 bg-light-dark text-light" >-->
+<!--            <ComparisonTable type="leagues" :data="leaguesWithStats" :data-field="key"/>-->
+<!--          </b-row>-->
 
         </b-tab>
       </b-tabs>
@@ -50,12 +50,12 @@
 <script>
 import {mapState} from 'vuex';
 import api from "@/api";
-import ComparisonTable from "@/components/charts/ComparisonTable";
+// import ComparisonTable from "@/components/charts/ComparisonTable";
 
 //TODO add more graphs and stuff;
 export default {
   name: "LeagueComparison",
-  components:{ComparisonTable},
+  // components:{ComparisonTable},
   computed: {
     ...mapState({
       selectedLeagues: state => state.selected.leagues,

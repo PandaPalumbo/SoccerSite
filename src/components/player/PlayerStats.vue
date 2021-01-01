@@ -25,9 +25,9 @@
           </b-tab>
         </div>
 
-        <b-tab title-link-class="text-light  font-weight-bold" title="Current Season">
+        <b-tab title-link-class="text-light  font-weight-bold" title="Current Season - All Competitions">
           <b-row class="m-2 bg-light-dark">
-            <StatsTable :data="currentStats" :label="currentStats.league_data.name + ' - ' + currentStats.season_data.name" variant="dark" class="m-4"/>
+            <StatsTable :data="currentStats" label="All Competitions" variant="dark" class="m-4"/>
           </b-row>
         </b-tab>
       </b-tabs>
@@ -50,10 +50,26 @@ export default {
   },
   computed: {
     currentStats() {
-      let stats = this.stats;
-      stats = stats.filter(stat => stat.season.data.is_current_season && stat.type == 'domestic')[0]
-      console.log(stats);
-      return api.util.flattenJson(stats)
+      let stats = this.stats.filter(stat => stat.season.data.is_current_season)
+      stats = stats.map(stat => api.util.flattenJson(stat))
+      let keys = Object.keys(stats[0]);
+      let combinedStats = {}
+      keys.forEach(key => {
+          combinedStats[key] = 0;
+          stats.forEach(stat => {
+            if(key == 'rating'){
+              combinedStats[key] += parseFloat(stat[key])
+            } else{
+              combinedStats[key] += stat[key]
+            }
+
+          })
+
+      })
+      combinedStats['rating'] = (combinedStats['rating']/stats.length).toFixed(2)
+      combinedStats['passes_accuracy'] = (combinedStats['passes_accuracy']/stats.length).toFixed(2)
+      console.log(combinedStats);
+      return combinedStats
     },
     allStats() {
       return this.stats.map(stat => api.util.flattenJson(stat));
@@ -68,7 +84,7 @@ export default {
         };
       })
       console.log(leagues)
-      return leagues.sort((a,b)=>  b.text - a.text);
+      return leagues.sort((a,b)=>  b.value.season_data.name.split("/")[0] - a.value.season_data.name.split("/")[0]);
     }
   },
   methods: {

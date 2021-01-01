@@ -40,7 +40,6 @@
       <h4 class="text-warning"> Please search for a player!</h4>
     </b-col>
 
-    <span class="mx-4 my-1 text-warning">*  Offensive data collected</span>
   </b-row>
 </template>
 
