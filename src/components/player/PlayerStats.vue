@@ -1,56 +1,76 @@
 <template>
   <b-row v-if="stats" class="bg-light-dark p-1 mb-2 rounded w-100">
-    <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab w-100 bg-dark">
-      <b-tab title-link-class="text-light  font-weight-bold" v-for="(key, i) in Object.keys(stats)"
-             :key="Math.random() * i" :title="prettyCasing(key)">
-        <b-row class="m-2 bg-light-dark" v-if="key === 'assists'">
-          <StatsTable :data="stats[key]" :label="prettyCasing(key)" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'goals'">
-          <StatsTable :data="stats[key]" :label="prettyCasing(key)" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'penalties'">
-          <StatsTable :data="stats[key]" :label="prettyCasing(key)" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'offsides'">
-          <StatsTable :data="stats[key]" :label="prettyCasing(key)" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'substitutions'">
-          <StatsTable :data="stats[key]['in']" :label="prettyCasing(key + ' In')" variant="dark" class="m-4"/>
-          <StatsTable :data="stats[key]['out']" :label="prettyCasing(key + ' Out')" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'cards'">
-          <StatsTable :data="stats[key]['yellow']" :label="prettyCasing('Yellow Cards')" variant="dark" class="m-4"/>
-          <StatsTable :data="stats[key]['yellowred']" :label="prettyCasing('Red Cards - Double Yellow')" variant="dark" class="m-4"/>
-          <StatsTable :data="stats[key]['redcards']" :label="prettyCasing('Straight Reds')" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'shots'">
-          <StatsTable :data="stats[key]" :label="prettyCasing('Total Shots')" variant="dark" class="m-4"/>
-          <StatsTable :data="stats[key]['on_target']" :label="prettyCasing('Shots On Target')" variant="dark" class="m-4"/>
-          <StatsTable :data="stats[key]['off_target']" :label="prettyCasing('Shots On Target')" variant="dark" class="m-4"/>
-          <StatsTable :data="stats[key]['blocked']" :label="prettyCasing('Taken Shots Blocked')" variant="dark" class="m-4"/>
-        </b-row>
-        <b-row class="m-2 bg-light-dark" v-if="key === 'corners'">
-          <StatsTable :data="stats[key]" :label="prettyCasing(key)" variant="dark" class="m-4"/>
-        </b-row>
-      </b-tab>
-    </b-tabs>
+
+    <b-col cols="2">
+      <b-form-group class="league-list p-2">
+        <b-form-checkbox-group
+            v-model="selected_league_stats"
+            :options="leagues"
+            stacked
+            buttons
+            button-variant="outline-light"
+            @change="test"
+        ></b-form-checkbox-group>
+      </b-form-group>
+    </b-col>
+
+    <b-col cols="10">
+      <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab w-100 bg-dark league-list ">
+        <div v-for="(stat, i) in selected_league_stats" :key="i">
+          <b-tab  v-if="selected_league_stats.length > 0" title-link-class="text-light  font-weight-bold" :title="stat.league_data.name + ' - ' + stat.season_data.name"
+          >
+            <b-row class="m-2 bg-light-dark">
+              <StatsTable :data="stat" :label="stat.league_data.name + ' - ' + stat.season_data.name" variant="dark" class="m-4"/>
+            </b-row>
+          </b-tab>
+        </div>
+
+        <b-tab title-link-class="text-light  font-weight-bold" title="Current Season">
+          <b-row class="m-2 bg-light-dark">
+            <StatsTable :data="currentStats" :label="currentStats.league_data.name + ' - ' + currentStats.season_data.name" variant="dark" class="m-4"/>
+          </b-row>
+        </b-tab>
+      </b-tabs>
+    </b-col>
   </b-row>
 </template>
 
 <script>
 import StatsTable from "@/components/charts/StatsTable";
+import api from '../../api';
 
 export default {
-name: "PlayerStats",
-  components:{StatsTable},
+  name: "PlayerStats",
+  components: {StatsTable},
   props: {
     stats: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
-
+  computed: {
+    currentStats() {
+      let stats = this.stats;
+      stats = stats.filter(stat => stat.season.data.is_current_season && stat.type == 'domestic')[0]
+      console.log(stats);
+      return api.util.flattenJson(stats)
+    },
+    allStats() {
+      return this.stats.map(stat => api.util.flattenJson(stat));
+    },
+    leagues() {
+      let leagues = this.stats.map(stat => {
+        let league = stat.league.data;
+        league['season_name'] = stat.season.data.name;
+        return {
+          text: league.name + ' - ' + league.season_name,
+          value: api.util.flattenJson(stat),
+        };
+      })
+      console.log(leagues)
+      return leagues.sort((a,b)=>  b.text - a.text);
+    }
+  },
   methods: {
     prettyCasing(string) {
       let splitString = string.split('_');
@@ -63,11 +83,22 @@ name: "PlayerStats",
     },
     getColor() {
       return this.$randomColor({luminosity: 'bright'}).toString();
+    },
+    test(){
+      console.log(this.selected_league_stats)
     }
   },
+  data() {
+    return {
+      selected_league_stats: [],
+    }
+  }
 }
 </script>
 
 <style scoped>
-
+.league-list {
+  max-height: 900px;
+  overflow-y: auto;
+}
 </style>

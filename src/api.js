@@ -53,7 +53,7 @@ export default {
                     retrieve(config, teams => {
                         teams.data.map(team => db.collection('teams').doc(team.name).set(team))
                     }),
-                2000)
+                    2000)
             })
             callback('Done')
         },
@@ -62,7 +62,7 @@ export default {
             // const countries = ['England', 'USA', 'Mexico', 'Brazil', 'France', 'Germany', 'Portugal', 'Netherlands', 'Italy', 'Spain']
             db.collection('competitions').where('country_name', '==', 'Spain').get()
                 .then(leagues => {
-                    try{
+                    try {
                         leagues.forEach(league => {
                             league = league.data();
                             let params =
@@ -73,22 +73,22 @@ export default {
                             console.log(league)
                             params.query += league.current_season_id;
                             let config = this.buildAPIConfig(params);
-                            retrieve(config, (data)=>{
+                            retrieve(config, (data) => {
                                 let fixtures = data.data;
                                 console.log(fixtures);
                                 fixtures.map(fixture => {
-                                    db.collection('fixtures').doc(""+fixture.id).set(fixture, {merge:true})
+                                    db.collection('fixtures').doc("" + fixture.id).set(fixture, {merge: true})
                                 });
                             })
                         });
-                    }catch(e){
+                    } catch (e) {
                         console.error(e);
                     }
                 })
         },
-        saveLeagueStats(){
-            let league_ids = [1358,2802,2803,2878,3104,3105,3699,3704,377,547,580,583,592,594,637,638,719,721,764,765];
-            league_ids.forEach(id=>{
+        saveLeagueStats() {
+            let league_ids = [1358, 2802, 2803, 2878, 3104, 3105, 3699, 3704, 377, 547, 580, 583, 592, 594, 637, 638, 719, 721, 764, 765];
+            league_ids.forEach(id => {
                 let params =
                     {
                         type: 'stats',
@@ -96,7 +96,7 @@ export default {
                     }
                 params.query += id;
                 let config = this.buildAPIConfig(params);
-                setTimeout(function(){
+                setTimeout(function () {
                     retrieve(config, data => {
                         let stats = data.data;
                         console.log(stats)
@@ -104,7 +104,7 @@ export default {
                 }, 1500);
             })
         },
-        savePlayers(){
+        savePlayers() {
             //let country ids = [25,76,81,96,124,3,4,5,6,7];
             let params = {
                 type: 'teams',
@@ -112,13 +112,13 @@ export default {
             }
             params.query += '25'
             let config = this.buildAPIConfig(params);
-            retrieve(config, data=>{
+            retrieve(config, data => {
                 let players = data.data;
                 console.log(players);
             })
         },
         //building the url for the config
-        buildAPIConfig : (params) =>{
+        buildAPIConfig: (params) => {
             let config = {};
             const baseConfig = {
                 method: 'get',
@@ -134,48 +134,48 @@ export default {
     },
     getData: {
         //TODO hook up with cloud sql instead of firebase
-        getLeagues:(callback)=>{
+        getLeagues: (callback) => {
             let retArr = [];
             db.collection('competitions').where('is_amateur', '==', '0').get()
-                .then((leagues =>{
-                    leagues.forEach(league =>{
+                .then((leagues => {
+                    leagues.forEach(league => {
                         let data = league.data();
                         retArr.push(data)
                     })
                 }))
-                .then(()=>{
+                .then(() => {
                     callback(retArr);
                 })
                 .catch(e => console.error(e));
         },
 
         //gets teams from cloud sql
-        getTeams:(callback)=>{
-           let config = buildDBConfig('teams');
-           retrieve(config, (data)=>{
-               callback(data)
-           })
+        getTeams: (callback) => {
+            let config = buildDBConfig('teams');
+            retrieve(config, (data) => {
+                callback(data)
+            })
         },
         //TODO hook up with cloud sql
 
-        getLeagueStats:(id, callback) =>{
-          let params = {
-              type: 'stats',
-              query: '&t=league&id='+id,
-          }
-          let config = buildAPIConfig(params);
-          retrieve(config, data=> callback(data));
+        getLeagueStats: (id, callback) => {
+            let params = {
+                type: 'stats',
+                query: '&t=league&id=' + id,
+            }
+            let config = buildAPIConfig(params);
+            retrieve(config, data => callback(data));
         },
 
         //hits the endpoint that retrieves players given a name
-        searchPlayers:(query, callback)=>{
-            let config = buildDBConfig('search/players/?search='+query);
-            retrieve(config, (data)=>{
+        searchPlayers: (query, callback) => {
+            let config = buildDBConfig('search/players/?search=' + encodeURI(query));
+            retrieve(config, (data) => {
 
                 callback(data);
             })
         },
-        
+
     },
     firebase: {
         //gets firebase started for the app
@@ -184,8 +184,30 @@ export default {
             db = firebase.firestore();
         },
     },
+    util: {
+        flattenJson(obj) {
+            let flattened_obj = {};
+            let keys = Object.keys(obj);
+            keys.forEach ( key => {
+                if (obj[key] && typeof obj[key] == "object") {
+                    let subKeys = Object.keys(obj[key]);
+                    subKeys.forEach (subKey => {
+                        flattened_obj[key + '_' + subKey] = obj[key][subKey]
+                    })
+                } else {
+                    if(obj[key] && obj[key].data){
+                        flattened_obj[key] = obj[key].data;
+                    }else{
+                        flattened_obj[key] = obj[key];
+                    }
+                }
+            })
+            return flattened_obj;
+        }
+    }
 }
-function buildAPIConfig (params){
+
+function buildAPIConfig(params) {
     let config = {};
     //this is the basic structure of the JSON passed to axios to fetch data
     const baseConfig = {
@@ -203,23 +225,23 @@ function buildAPIConfig (params){
 }
 
 //same as above, but configured to hit our cloud sql with endpoint url baked in already.
-function buildDBConfig (params){
+function buildDBConfig(params) {
     const config = {
         method: 'get',
-        url: 'http://localhost:3000/'+params,
-        headers:{}
+        url: 'http://localhost:3000/' + params,
+        headers: {}
     };
     return config;
 }
 
 //gets data given the proper config
 //works for both api calls and cloud sql calls
-function retrieve(config,cb) {
-     axios(config).then(data =>{
-         let res = data.data;
-         // console.log(data.data)
-         cb(res);
-     }).catch((e)=> console.error(e));
+function retrieve(config, cb) {
+    axios(config).then(data => {
+        let res = data.data;
+        // console.log(data.data)
+        cb(res);
+    }).catch((e) => console.error(e));
 }
 
 

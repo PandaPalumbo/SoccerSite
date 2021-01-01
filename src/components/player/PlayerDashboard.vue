@@ -8,23 +8,20 @@
             <b-col cols="2">
               <div class="w-100 h-100">
                 <img @error="altImage" class="player-img bg-light"
-                     :src="'https://cdn.soccersapi.com/images/soccer/players/100/'+data.id+'.png'"/>
+                     :src="data.image_path"/>
               </div>
 
             </b-col>
             <b-col cols="10">
-              <p>{{ data.firstname + " " + data.lastname }}</p>
+              <p><img class="big-flag-logo" :src="data.country.data.image_path" />{{"  " + data.firstname + " " + data.lastname }}</p>
               <p class="text-small">
-                <img :src="'https://cdn.soccersapi.com/images/soccer/teams/50/' + data.team_id + '.png'"/>
-                {{ data.team_name }}, #{{ data.number }} -
-                {{ data.position == 'D' ? 'Defender' : '' }}
-                {{ data.position == 'M' ? 'Midfielder' : '' }}
-                {{ data.position == 'F' ? 'Forward' : '' }}
-                {{ data.position == 'G' ? 'Goalkeeper' : '' }}
+                <img class="small-logo" :src="data.team.data.logo_path"/>
+                {{ data.team.data.name }}, #{{ data.lineups.data[0].number }} -
+                {{ data.position.data.name}}
               </p>
               <p class="text-small">
-                <img :src="'https://cdn.soccersapi.com/images/soccer/leagues/50/' + data.league_id + '.png'"/>
-                {{ data.league_name }}
+                <img class="small-logo" :src="data.team.data.league.data.logo_path"/>
+                {{ data.team.data.league.data.name + ', ' + data.team.data.country.data.name }}
               </p>
             </b-col>
           </b-row>
@@ -32,24 +29,21 @@
         <template v-if="data" #lead>
           <b-row class="pt-4">
             <b-col cols="6">
-              <p>{{ 'Nationality: ' + data.country_name }}</p>
-              <p>Number: {{ data.number }}</p>
-              <p>{{ 'Matches Played: ' + data.matches_played_total }}</p>
-              <p>{{ 'Weight : ' + data.weight + ' kg, ' + calculatePounds(data.weight) + ' lbs' }}</p>
-              <p>{{ 'Matches Started: ' + data.matches_starting_total }}</p>
+              <p>Nationality:  <img class="flag-logo" :src="data.country.data.image_path" /> {{  data.nationality }}</p>
+              <p>Number: {{  data.lineups.data[0].number }}</p>
+              <p>{{ 'Matches Played: ' + currentStats.appearences }}</p>
+              <p>{{ 'Weight : ' + data.weight + ", " + calculatePounds(data.weight) + ' lbs' }}</p>
+              <p>{{ 'Goals: ' + currentStats.goals }}</p>
             </b-col>
             <b-col cols="6">
-              <p>{{ 'Age : ' + calculateAge(data.birthday) }}</p>
+              <p>{{ 'Age : ' + calculateAge(data.birthdate) }}</p>
               <p>
                 Position:
-                {{ data.position == 'D' ? 'Defender' : '' }}
-                {{ data.position == 'M' ? 'Midfielder' : '' }}
-                {{ data.position == 'F' ? 'Forward' : '' }}
-                {{ data.position == 'G' ? 'Goalkeeper' : '' }}
+                {{ data.position.data.name}}
               </p>
-              <p>{{ 'Birthday : ' + data.birthday }}</p>
-              <p>{{ 'Height : ' + data.height + ' cm, ' + calculateFeetInchecs(data.height) }}</p>
-              <p>{{ 'Starting Average: ' + data.matches_starting_avg + '%' }}</p>
+              <p>{{ 'Birthday : ' + data.birthdate }}</p>
+              <p>{{ 'Height : ' + data.height + ', ' + calculateFeetInchecs(data.height) }}</p>
+              <p>{{ 'Assists: ' + currentStats.assists  }}</p>
             </b-col>
           </b-row>
         </template>
@@ -62,13 +56,13 @@
     </b-row>
 
     <!--    Stats Container-->
-    <PlayerStats :stats="data.stats" class="w-100"/>
+    <PlayerStats :stats="data.stats.data" class="w-100"/>
   </div>
 </template>
 
 <script>
 import PlayerStats from "@/components/player/PlayerStats";
-
+import api from "@/api";
 
 export default {
   name: "Players",
@@ -79,7 +73,13 @@ export default {
       required: true,
     },
   },
-  computed: {},
+  computed: {
+    currentStats(){
+      let stats = this.data.stats.data;
+      stats = stats.filter(stat => stat.season_id === this.data.team.data.current_season_id)[0]
+      return api.util.flattenJson(stats)
+    },
+  },
   data() {
     return {
       dataImg: this.data.img,
@@ -103,6 +103,8 @@ export default {
       e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/100/' + this.data.team_id + '.png'
     },
     calculateAge(birthday) { // birthday is a date
+      birthday = birthday.split('/')
+      birthday = birthday[1] + '/' + birthday[0] + '/' + birthday[2]
       let bday = new Date(birthday)
       let ageDifMs = Date.now() - bday.getTime();
       let ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -144,5 +146,19 @@ export default {
   margin-bottom: 30px;
   display: block !important;
   border-radius: 10px;
+}
+.small-logo{
+  width: 50px;
+  height: 50px;
+}
+
+.flag-logo{
+  width: 50px;
+  height: 25px;
+}
+
+.big-flag-logo{
+  width: 100px;
+  height: 50px;
 }
 </style>

@@ -20,7 +20,7 @@ name: "PlayGround.vue",
   },
   methods:{
     test(){
-      api.getData.getTeams((data) => console.log(data))
+      api.getData.searchPlayers('James Tavernier',(data) => console.log(data))
     }
   },
 }

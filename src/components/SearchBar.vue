@@ -19,8 +19,8 @@
                            @mousedown.stop="addSelectedValue(item)" variant="dark">
           <b-row class="d-flex w-100 p-0 m-0">
             <b-col cols="1">
-              <img class="league-img bg-light" @error="(e) => altImage(e, item)"
-                   :src="'https://cdn.soccersapi.com/images/soccer/players/50/'+item.id+'.png'"/>
+              <img class="league-img bg-light"
+                   :src="item.image_path"/>
             </b-col>
             <b-col cols="10" class="p-0 m-0">
               <p class="p-0 m-0">
@@ -29,11 +29,11 @@
               </p>
               <p class="p-0 m-0">
                 <strong>Nationality - </strong>
-                {{item.country_name + " " }}
+                {{item.nationality + " " }}
               </p>
               <p class="p-0 m-0">
                 <strong>Club - </strong>
-                {{  item.team_name + ", " + item.league_name }}
+                {{  item.team.data.name + ", " + item.team.data.league.data.name }}
               </p>
             </b-col>
 
@@ -117,10 +117,10 @@ export default {
         })
       }
     },
-    altImage(e, item) {
-      //console.log(e)
-      e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/50/' + item.team_id + '.png'
-    },
+    // altImage(e, item) {
+    //   //console.log(e)
+    //   e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/50/' + item.team_id + '.png'
+    // },
   },
 }
 </script>
@@ -128,5 +128,9 @@ export default {
 <style scoped>
 .suggestions {
   z-index: 2;
+}
+.league-img{
+  width: 100px;
+  height:100px;
 }
 </style>

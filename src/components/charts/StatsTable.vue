@@ -1,6 +1,6 @@
 <template>
   <b-col class="mx-auto my-1" cols="11">
-    <table :class="['table table-bordered table-striped table-'+variant]" >
+    <table :class="['table table-bordered table-striped table-'+variant]">
       <thead>
       <tr>
         <th scope="col" colspan="2" class="text-center">
@@ -10,29 +10,26 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-if="data['total'] != undefined">
-        <th scope="row">Total</th>
-        <td>{{data.total? data.total : 0}}</td>
-      </tr>
-      <tr v-if="data['avg_per_match'] != undefined">
-        <th scope="row">Per Match</th>
-        <td>{{data.avg_per_match ? data.avg_per_match : 0}}</td>
-      </tr>
-      <tr v-if="data['avg'] != undefined">
-        <th scope="row">Chance Per Match</th>
-        <td>{{data.avg ? data.avg : 0}}%</td>
-      </tr>
-      <tr v-if="data['avg_calc'] != undefined">
-        <th scope="row">Per Match</th>
-        <td>{{ data.avg_calc ? (data.avg_calc).toFixed(2) : 0}}</td>
-      </tr>
-      <tr v-if="data['avg_every_minutes'] != undefined">
-        <th scope="row">Minutes Per</th>
-        <td>{{ (label === 'Assists ' || label === 'Substitutions') &&  data.avg_per_match != 0 ? Math.floor(90/data.avg_per_match): data.avg_every_minutes}}</td>
-      </tr>
-      <tr v-if="data['percentage_total_goals'] != undefined">
-        <th scope="row">Percentage of Total Goals</th>
-        <td>{{data.percentage_total_goals +'%'}}</td>
+      <tr v-for="(key, i) in wantedDataPoints" :key="i" >
+        <th v-if="key == 'owngoals'" scope="row">
+         Own Goals
+        </th>
+        <th v-else-if="key == 'yellowcards'" scope="row">
+          Yellow Cards
+        </th>
+        <th v-else-if="key == 'yellowred'" scope="row">
+          Red Card - Double Yellow
+        </th>
+        <th v-else-if="key == 'redcards'" scope="row">
+          Straight Red Card
+        </th>
+        <th v-else-if="key == 'redcards'" scope="row">
+          Straight Red Card
+        </th>
+        <th v-else scope="row">
+          {{ prettyCasing(key) }}
+        </th>
+        <td>{{data[key] ? data[key] : 0}}</td>
       </tr>
       </tbody>
     </table>
@@ -43,34 +40,56 @@
 
 <script>
 export default {
-name: "StatsTable",
-props:{
-  data:{
-    type: Object,
-    required: true,
+  name: "StatsTable",
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+    label: {
+      type: String,
+      required: true,
+    },
+    variant: {
+      type: String,
+      required: false,
+      default: 'light',
+    },
   },
-  label:{
-    type: String,
-    required: true,
-  },
-  variant:{
-    type: String,
-    required: false,
-    default:'light',
-  },
-},
-  computed:{
-    areAnyZero(){
+  computed: {
+    areAnyZero() {
       let keys = Object.keys(this.data);
       let areAnyZero = false
-      keys.forEach(key =>{
-        if(!this.data[key])
+      keys.forEach(key => {
+        if (!this.data[key])
           areAnyZero = true;
         return areAnyZero
       })
       return areAnyZero
+    },
+    wantedDataPoints() {
+      let keys = Object.keys(this.data);
+      keys = keys.filter(key => {
+        return key != 'season_data' && key != 'player_id' && key != 'team_id' && key != 'season_id' && key != 'captain' && key != 'league_id' && key != 'type' && key != 'league_data'
+
+      })
+      return keys;
+    },
+  },
+  methods: {
+    prettyCasing(string) {
+      let splitString = string.split('_');
+      let res = "";
+      splitString.map(string => {
+        string = string.charAt(0).toUpperCase() + string.slice(1)
+        res += string + " "
+      })
+      return res;
+    },
+    getColor() {
+      return this.$randomColor({luminosity: 'bright'}).toString();
     }
-  }
+  },
 }
 </script>
 
