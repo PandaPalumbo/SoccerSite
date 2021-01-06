@@ -90,6 +90,14 @@ export default new Vuex.Store({
                 }
             );
         },
+        // takes in name of player and searches DB
+        queryLeagues({state}, {query}) {
+            api.getData.searchLeagues(query, (data) => {
+                    state.players = data;
+                    console.log(data);
+                }
+            );
+        },
     }
 })
 //

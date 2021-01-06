@@ -52,6 +52,21 @@ app.get('/search/players', (req, res) => {
         res.send('No player name sent...')
 })
 
+app.get('/search/leagues', (req, res) => {
+    let search = req.query.search;
+    if(search) {
+        let config = buildAPIConfig({
+            type:'leagues/search/'+search,
+            query:'&include=country,season,season.stats,seasons,seasons.stats'
+        })
+        retrieve(config, (data)=> {
+            res.send(data.data);
+        })
+    }
+    else
+        res.send('No player name sent...')
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })

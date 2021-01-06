@@ -2,7 +2,7 @@
   <div class="position-relative w-100">
     <b-form-input
 
-        placeholder="Type player name to search..."
+        :placeholder="getPlaceholder()"
         v-model="searchValue"
         @focus="focused = true"
         @blur="focused = false"
@@ -13,7 +13,8 @@
         @change="(value) => search(value)"
         @cancel="focused = false"
     />
-    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue">
+      <!--    Player search bar-->
+    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue && dataType === 'players'">
       <div v-for="(item, i) in suggestions.slice(0, 10)" :key="i" >
         <b-list-group-item class="py-2" href="#"
                            @mousedown.stop="addSelectedValue(item)" variant="dark">
@@ -42,6 +43,32 @@
       </div>
 
     </b-list-group>
+    <!--    League search bar-->
+    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue && dataType === 'leagues'">
+      <div v-for="(item, i) in suggestions.slice(0, 10)" :key="i" >
+        <b-list-group-item class="py-2" href="#"
+                           @mousedown.stop="addSelectedValue(item)" variant="dark">
+          <b-row class="d-flex w-100 p-0 m-0">
+            <b-col cols="1">
+              <img class="league-img bg-light"
+                   :src="item.logo_path"/>
+            </b-col>
+            <b-col cols="10" class="p-0 m-0">
+              <p class="p-0 m-0">
+                <strong>Name - </strong>
+                {{ item.name }}
+              </p>
+              <p class="p-0 m-0">
+                <strong>Country - </strong>
+                {{item.country.data.name + " " }}
+              </p>
+            </b-col>
+
+          </b-row>
+        </b-list-group-item>
+      </div>
+
+    </b-list-group>
   </div>
 </template>
 
@@ -51,21 +78,6 @@ import {mapState} from 'vuex';
 export default {
   name: "SearchBar",
   props: {
-    inNoteModal: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    inTimelineModal: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    patId: {
-      type: Number,
-      required: false,
-      default: null,
-    },
     dataType: {
       type: String,
       required: true,
@@ -112,11 +124,27 @@ export default {
     search(val) {
       if (val.length >= 4) {
         //console.log('hit componenet search method')
-        this.$store.dispatch('queryPlayers', {
-          query: val
-        })
+        if(this.dataType === 'players')
+          this.$store.dispatch('queryPlayers', {
+            query: val
+          })
+        if(this.dataType === 'leagues')
+          this.$store.dispatch('queryLeagues', {
+            query: val
+          })
       }
     },
+    getPlaceholder(){
+      if(this.dataType === 'players'){
+        return 'Type player name to search...'
+      } else if(this.dataType === 'leagues' ){
+        return 'Type league name to search...'
+      } else if(this.dataType === 'teams'){
+        return 'Type team name to search...'
+      } else {
+        return 'Type player name to search...'
+      }
+    }
     // altImage(e, item) {
     //   //console.log(e)
     //   e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/50/' + item.team_id + '.png'

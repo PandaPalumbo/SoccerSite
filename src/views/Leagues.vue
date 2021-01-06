@@ -1,14 +1,10 @@
 <template>
   <!-- Body container -->
   <b-row class=" m-4 bg-dark p-2">
-    <!--  Sidebar column  -->
-    <b-col v-show="sidebarOpen" cols="3" class="bg-dark text-light border-light border rounded overflow-auto">
-      <SidebarRow
-          v-for="(league, i) in leagues" :key="i" type="leagues"
-          class="bg-dark border border-secondary rounded"
-          :data="league" :label="league.country_name + ' - ' + league.name"/>
-    </b-col>
     <!-- Main Container / Data   -->
+    <b-col cols="12">
+      <SearchBar data-type="leagues" />
+    </b-col>
     <b-col class="info-cont m-2">
       <!--  Show/Hide Btn, Compare Btn, Selected league pills   -->
       <b-row>
@@ -18,7 +14,7 @@
               {{ sidebarOpen ? 'Hide Leagues' : 'Choose Leagues' }}
             </b-button>
             <b-button v-show="selectedLeagues.length >1" class="ml-2" @click="canCompare">
-              {{ comparing ? 'Stop Comparing' : 'Compare Selcted' }}
+              {{ comparing ? 'Stop Comparing' : 'Compare Selected' }}
             </b-button>
           </b-row>
         </b-col>
@@ -32,7 +28,7 @@
         <b-tabs active-nav-item-class="bg-light-dark text-light " class="bg-dark rounded p-1">
           <b-tab title-link-class="font-weight-bold text-light" v-for="(league, i) in selectedLeagues" :key="i"
                  :title="league.name">
-            <League :id="parseInt(league.id)"/>
+            <LeagueDashboard :id="parseInt(league.id)" :data="league"/>
           </b-tab>
         </b-tabs>
       </div>
@@ -47,16 +43,15 @@
 
 <script>
 import {mapState} from 'vuex';
-import SidebarRow from "@/components/sidebar/SidebarRow";
+import SearchBar from "@/components/SearchBar";
 import SelectedPill from "@/components/sidebar/SelectedPill";
-import League from "@/components/league/League";
+import LeagueDashboard from "@/components/league/LeagueDashboard";
 import LeagueComparison from "@/components/league/LeagueComparison";
 
 export default {
   name: "Leagues.vue",
   components: {
-    LeagueComparison,
-    SidebarRow, SelectedPill, League
+    LeagueComparison, SelectedPill, LeagueDashboard, SearchBar
   },
   computed: {
     //get the leagues and selected leagues from the state

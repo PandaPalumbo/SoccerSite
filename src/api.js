@@ -176,6 +176,15 @@ export default {
             })
         },
 
+        //hits the endpoint that retrieves players given a name
+        searchLeagues: (query, callback) => {
+            let config = buildDBConfig('search/leagues/?search=' + encodeURI(query));
+            retrieve(config, (data) => {
+
+                callback(data);
+            })
+        },
+
     },
     firebase: {
         //gets firebase started for the app
@@ -203,7 +212,16 @@ export default {
                 }
             })
             return flattened_obj;
-        }
+        },
+        prettyCasing(string) {
+            let splitString = string.split('_');
+            let res = "";
+            splitString.map(string => {
+                string = string.charAt(0).toUpperCase() + string.slice(1)
+                res += string + " "
+            })
+            return res;
+        },
     }
 }
 
