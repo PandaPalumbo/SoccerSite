@@ -21,7 +21,7 @@
       </b-row>
     </b-col>
     <!--    Search Container-->
-    <b-col cols="12">
+    <b-col cols="12" v-if="!comparing">
       <SearchBar data-type="players"></SearchBar>
     </b-col>
     <!--    Main Container-->

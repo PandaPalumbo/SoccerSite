@@ -3,20 +3,17 @@
   <div class="mx-4">
     <!--    Header Container-->
     <b-row class="league-cont">
-<!--      <b-jumbotron bg-variant="dark" text-variant="light" class="w-100 mt-1">-->
-<!--        <template v-if="names" #lead>-->
-<!--          &lt;!&ndash; Radar   &ndash;&gt;-->
-<!--          <b-row v-if="selectedPlayers.length > 1" class="w-100 h-100">-->
-<!--            <Radar style="width: 33%; height: 33%; margin:auto;" :data="radarStats.datasets"-->
-<!--                   :labels="radarStats.lables"/>-->
-<!--          </b-row>-->
-<!--        </template>-->
-<!--        <template #lead v-else>-->
-<!--          <b-row class="justify-content-center">-->
-<!--            <b-spinner></b-spinner>-->
-<!--          </b-row>-->
-<!--        </template>-->
-<!--      </b-jumbotron>-->
+      <b-jumbotron bg-variant="dark" text-variant="light" class="w-100 mt-1">
+        <template v-if="names" #lead>
+          <!-- Radar   -->
+          <PlayerRadar :stats="stats"/>
+        </template>
+        <template #lead v-else>
+          <b-row class="justify-content-center">
+            <b-spinner></b-spinner>
+          </b-row>
+        </template>
+      </b-jumbotron>
     </b-row>
     <!--    Data container-->
 
@@ -34,14 +31,14 @@
 
 <script>
 import {mapState} from 'vuex';
-// import Radar from "@/components/charts/Radar";
+import PlayerRadar from "@/components/player/PlayerRadar";
 import ComparisonTable from "@/components/charts/ComparisonTable";
 import api from "@/api";
 
 //TODO add more graphs and stuff;
 export default {
   name: "LeagueComparison",
-  components: {ComparisonTable},
+  components: {ComparisonTable, PlayerRadar},
   computed: {
     ...mapState({
       selectedPlayers: state => state.selected.players,
@@ -75,7 +72,7 @@ export default {
             })
             combinedStats['rating'] = (combinedStats['rating'] / stats.length).toFixed(2)
             combinedStats['passes_accuracy'] = (combinedStats['passes_accuracy'] / stats.length).toFixed(2)
-            console.log(combinedStats)
+            //console.log(combinedStats)
             return combinedStats;
           }
       )

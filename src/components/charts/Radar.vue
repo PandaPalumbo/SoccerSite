@@ -1,17 +1,14 @@
 <script>
 
-import {Radar} from 'vue-chartjs'
+import {Radar, mixins} from 'vue-chartjs'
+const {reactiveProp } = mixins;
 
 export default {
   extends: Radar,
-  props: ['data', 'labels', 'backgroundColors'],
+  mixins: [reactiveProp],
   mounted() {
     this.renderChart(
-        //data
-        {
-          labels: this.labels,
-          datasets:this.data,
-        },
+        this.chartData,
         //options
         {
           legend: {

@@ -74,11 +74,12 @@ export default {
           value: stat,
         };
       })
-      seasons.forEach(season => {
-        if(season.value.is_current_season){
-          this.selected_league_stats.push(season.value)
-        }
-      })
+      if(this.selected_league_stats.length ===0)
+        seasons.forEach(season => {
+          if(season.value.is_current_season){
+            this.selected_league_stats.push(season.value)
+          }
+        })
       return seasons.sort((a,b)=>  b.text.split('/')[0] - a.text.split('/')[0]);
     }
   },

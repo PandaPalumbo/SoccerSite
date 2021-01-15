@@ -68,7 +68,7 @@ export default {
       })
       combinedStats['rating'] = (combinedStats['rating']/stats.length).toFixed(2)
       combinedStats['passes_accuracy'] = (combinedStats['passes_accuracy']/stats.length).toFixed(2)
-      console.log(combinedStats);
+      //console.log(combinedStats);
       return combinedStats
     },
     allStats() {
@@ -83,7 +83,7 @@ export default {
           value: api.util.flattenJson(stat),
         };
       })
-      console.log(leagues)
+      //console.log(leagues)
       return leagues.sort((a,b)=>  b.value.season_data.name.split("/")[0] - a.value.season_data.name.split("/")[0]);
     }
   },
@@ -101,7 +101,7 @@ export default {
       return this.$randomColor({luminosity: 'bright'}).toString();
     },
     test(){
-      console.log(this.selected_league_stats)
+      //console.log(this.selected_league_stats)
     }
   },
   data() {

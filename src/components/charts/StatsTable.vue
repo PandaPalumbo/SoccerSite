@@ -26,6 +26,42 @@
         <th v-else-if="key == 'redcards'" scope="row">
           Straight Red Card
         </th>
+        <th v-else-if="key == 'goal_line_over_0_5'" scope="row">
+          Goal Line Over 0.5
+        </th>
+        <th v-else-if="key == 'goal_line_overr_1_5'" scope="row">
+          Goal Line Over 1.5
+        </th>
+        <th v-else-if="key == 'goal_line_over_2_5'" scope="row">
+          Goal Line Over 2.5
+        </th>
+        <th v-else-if="key == 'goal_line_over_3_5'" scope="row">
+          Goal Line Over 3.5
+        </th>
+        <th v-else-if="key == 'goal_line_over_4_5'" scope="row">
+          Goal Line Over 4.5
+        </th>
+        <th v-else-if="key == 'goal_line_over_5_5'" scope="row">
+          Goal Line Over 5.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_0_5'" scope="row">
+          Goal Line Under 0.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_1_5'" scope="row">
+          Goal Line Under 1.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_2_5'" scope="row">
+          Goal Line Under 2.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_3_5'" scope="row">
+          Goal Line Under 3.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_4_5'" scope="row">
+          Goal Line Under 4.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_5_5'" scope="row">
+          Goal Line Under 5.5
+        </th>
         <th v-else scope="row">
           {{ prettyCasing(key) }}
         </th>

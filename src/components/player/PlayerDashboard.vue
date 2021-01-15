@@ -94,7 +94,7 @@ export default {
       })
       combinedStats['rating'] = (combinedStats['rating']/stats.length).toFixed(2)
       combinedStats['passes_accuracy'] = (combinedStats['passes_accuracy']/stats.length).toFixed(2)
-      console.log(combinedStats);
+      //console.log(combinedStats);
       return combinedStats;
     },
   },
@@ -117,7 +117,7 @@ export default {
       return this.$randomColor({luminosity: 'bright'}).toString();
     },
     altImage(e) {
-      console.log(e)
+      //console.log(e)
       e.target.src = 'https://cdn.soccersapi.com/images/soccer/teams/100/' + this.data.team_id + '.png'
     },
     calculateAge(birthday) { // birthday is a date
