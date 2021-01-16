@@ -13,6 +13,7 @@
         @change="(value) => search(value)"
         @cancel="focused = false"
     />
+<!--    TODO one search for leagues another to grab that leagues data once selected-->
       <!--    Player search bar-->
     <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue && dataType === 'players'">
       <div v-for="(item, i) in suggestions.slice(0, 10)" :key="i" >

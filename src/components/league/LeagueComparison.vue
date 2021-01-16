@@ -23,22 +23,10 @@
     </b-row>
 <!--    Data container-->
 <!--    -->
-    <b-row v-if="leaguesWithStats.length > 1 && tabLabels" class="bg-light-dark p-1 mb-2 rounded">
-      <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab  bg-dark">
-        <b-tab title-link-class="text-light  font-weight-bold"
-               v-for="(key, i) in this.tabLabels"
-               :key="Math.random() * i"
-               :title="prettyCasing(key)"
-               v-show="key != 'goal_line'"
-        >
-<!--          for each data point make a table of points-->
-<!--          <b-row class="m-2 bg-light-dark text-light" >-->
-<!--            <ComparisonTable type="leagues" :data="leaguesWithStats" :data-field="key"/>-->
-<!--          </b-row>-->
 
-        </b-tab>
-      </b-tabs>
-    </b-row>
+      <b-row v-if="stats.length > 1" class="bg-light-dark p-1 mb-2 rounded">
+        <ComparisonTable :data="stats"/>
+      </b-row>
 <!--    if no data show loading-->
     <b-row class="justify-content-center" v-else>
       <b-spinner variant="light"></b-spinner>
@@ -49,13 +37,13 @@
 
 <script>
 import {mapState} from 'vuex';
-import api from "@/api";
-// import ComparisonTable from "@/components/charts/ComparisonTable";
+// import api from "@/api";
+import ComparisonTable from "@/components/charts/ComparisonTable";
 
 //TODO add more graphs and stuff;
 export default {
   name: "LeagueComparison",
-  // components:{ComparisonTable},
+  components:{ComparisonTable},
   computed: {
     ...mapState({
       selectedLeagues: state => state.selected.leagues,
@@ -63,10 +51,39 @@ export default {
     names(){
       return this.selectedLeagues.map(leagues => leagues.name)
     },
+    stats(){
+
+      let stats = this.selectedLeagues.map(league => {
+        let league_stats = {
+        }
+        league.seasons.data.forEach(season => {
+          if(season.is_current_season) {
+            let keys = Object.keys(season.stats.data);
+            league_stats['name'] = league.name;
+            keys.forEach(key => {
+              if(!key.includes('updated') || !key.includes('id'))
+                league_stats[key] = season.stats.data[key]
+            })
+          }
+        })
+        return league_stats;
+      })
+      console.log(stats)
+      return stats;
+    },
+    // sharedSeasons(){
+    //   let stats = this.stats;
+    //   let seasons = new Set();
+    //   stats.forEach(stat => {
+    //     let years = Object.keys(stat.stats);
+    //     years.forEach(year => seasons.add(year));
+    //   })
+    //   return seasons;
+    // }
+
   },
   data() {
     return {
-      leaguesWithStats: [],
       tabLabels: null,
     }
   },
@@ -80,44 +97,10 @@ export default {
       })
       return res;
     },
-    getStats(id, cb) {
-      api.getData.getLeagueStats(id, data => {
-        cb(data.data);
-      });
-    },
-    getColor() {
-      return this.$randomColor({luminosity: 'bright'}).toString();
-    },
-    //if no stats, load stats, if stats, push to array, then get the lables from stats.
-    getAllStats() {
-      this.selectedLeagues.forEach(league => {
-        let tempLeague = league;
-        if(!league.stats) {
-          this.getStats(league.id, data => {
-            tempLeague['stats'] = data;
-            tempLeague['stats']['name'] = league.name;
-            this.leaguesWithStats.push(tempLeague['stats']);
-            this.getTabLables();
-          })
-        }else {
-          tempLeague['stats']['name'] = league.name;
-          this.leaguesWithStats.push(tempLeague['stats']);
-          this.getTabLables();
-        }
-      })
-    },
-    //just gets labels for the comparison data tabs (ie: assists, subs, goals)
-    getTabLables() {
-      if (this.leaguesWithStats.length > 1) {
-        let stats = this.leaguesWithStats[0];
-        let keys = Object.keys(this.leaguesWithStats[0]);
-        let finalKeys = keys.filter(key => typeof stats[key] === 'object' && key != 'team_most_scored' && key != 'player_most_scored' && key != 'goal_line')
-        this.tabLabels = finalKeys;
-      }
-    },
+
+
   },
   mounted() {
-    this.getAllStats();
   }
 }
 </script>

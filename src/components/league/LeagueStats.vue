@@ -21,10 +21,6 @@
           <b-tab  v-if="selected_league_stats.length > 0" title-link-class="text-light  font-weight-bold" :title="stat.name"
           >
             <b-row class="m-2 bg-light-dark">
-              <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold" class="tab w-100 bg-dark league-list ">
-                <b-tab   title-link-class="text-light  font-weight-bold" title="Stats"
-                ></b-tab>
-              </b-tabs>
               <StatsTable :data="stat.stats.data" :label="stat.name" variant="dark" class="m-4"/>
             </b-row>
           </b-tab>
@@ -60,9 +56,9 @@ export default {
         stat['stats']['data'] = api.util.flattenJson(stat.stats.data);
         let keys = Object.keys(stat['stats']['data']);
         keys.forEach(key => {
-          if(key.includes('id')){
-            delete stat['stats']['data'][key]
-          }
+          // if(key.includes('id')){
+          //   delete stat['stats']['data'][key]
+          // }
           if(key == 'btts'){
             stat['stats']['data']['Both Teams To Score'] = stat['stats']['data'][key]
             delete stat['stats']['data'][key]
@@ -81,7 +77,10 @@ export default {
           }
         })
       return seasons.sort((a,b)=>  b.text.split('/')[0] - a.text.split('/')[0]);
-    }
+    },
+    currentSeason(){
+      return this.seasons.filter()
+    },
   },
   methods: {
     prettyCasing(string) {

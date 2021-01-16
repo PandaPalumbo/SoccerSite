@@ -1,41 +1,30 @@
 const express = require('express');
 require('dotenv').config();
-var cors = require('cors');
-const mysql = require('mysql');
+const cors = require('cors');
+// const mysql = require('mysql');
 const axios = require('axios');
 
 const app = express();
 const port = 3000;
 app.use(cors());
 
-const connection =  mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PW,
-    database: process.env.DB
-});
+// const connection =  mysql.createConnection({
+//     host: process.env.HOST,
+//     user: process.env.USER,
+//     password: process.env.PW,
+//     database: process.env.DB
+// });
 
 const apiUrl = 'https://soccer.sportmonks.com/api/v2.0/';
 const apiQuery = '?api_token='+ process.env.TOKEN;
 
 
 
-connection.connect((err)=> {
-    if (err) throw err
-})
 
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
 
-
-app.get('/teams', (req, res) => {
-    connection.query('SELECT * FROM teams', (err, data, fields) => {
-        if(err) throw err;
-        res.send(data);
-
-    })
-})
 
 app.get('/search/players', (req, res) => {
     let search = req.query.search;
@@ -52,12 +41,15 @@ app.get('/search/players', (req, res) => {
         res.send('No player name sent...')
 })
 
+
+//https://sportmonks.com/docs/football/2.0/leagues/a/search-league-by-name/222
+// nested stuff from -> https://sportmonks.com/docs/football/2.0/seasons/a/get-by-id/9
 app.get('/search/leagues', (req, res) => {
     let search = req.query.search;
     if(search) {
         let config = buildAPIConfig({
             type:'leagues/search/'+search,
-            query:'&include=country,season,season.stats,seasons,seasons.stats'
+            query:'&include=country,season,season.stats,season.stats.mostcleansheetsteam,season.stats.mostgoalsteam,season.stats.mostgoalspermatchteam,season.stats.mostconcededgoalsteam,season.stats.mostcornersteam,seasons,seasons.stats,season.aggregatedAssistscorers.player,season.aggregatedAssistscorers.team,season.cardscorers.player,,season.cardscorers.team,season.aggregatedGoalscorers.player,season.aggregatedGoalscorers.team,season.fixtures,season.round,season.fixtures.localTeam,season.fixtures.visitorTeam,season.upcoming.localTeam,season.upcoming.visitorTeam,season.results.localTeam,results.visitorTeam'
         })
         retrieve(config, (data)=> {
             res.send(data.data);

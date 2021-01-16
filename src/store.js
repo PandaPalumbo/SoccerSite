@@ -5,6 +5,9 @@ import VuexPersistence from 'vuex-persist';
 
 const vuexLocal = new VuexPersistence({
     storage: window.localStorage,
+    reducer: (state) => ({
+        selected: state.selected
+    })
 })
 
 Vue.use(Vuex);

@@ -222,6 +222,9 @@ export default {
             })
             return res;
         },
+        getColor() {
+            return this.$randomColor({luminosity: 'bright'}).toString();
+        },
     }
 }
 

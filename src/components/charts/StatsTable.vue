@@ -29,7 +29,7 @@
         <th v-else-if="key == 'goal_line_over_0_5'" scope="row">
           Goal Line Over 0.5
         </th>
-        <th v-else-if="key == 'goal_line_overr_1_5'" scope="row">
+        <th v-else-if="key == 'goal_line_over_1_5'" scope="row">
           Goal Line Over 1.5
         </th>
         <th v-else-if="key == 'goal_line_over_2_5'" scope="row">
@@ -58,6 +58,9 @@
         </th>
         <th v-else-if="key == 'goal_line_under_4_5'" scope="row">
           Goal Line Under 4.5
+        </th>
+        <th v-else-if="key == 'goal_line_under_5_5'" scope="row">
+          Goal Line Under 5.5
         </th>
         <th v-else-if="key == 'goal_line_under_5_5'" scope="row">
           Goal Line Under 5.5
@@ -106,7 +109,7 @@ export default {
     wantedDataPoints() {
       let keys = Object.keys(this.data);
       keys = keys.filter(key => {
-        return key != 'season_data' && key != 'player_id' && key != 'team_id' && key != 'season_id' && key != 'captain' && key != 'league_id' && key != 'type' && key != 'league_data'
+        return key != 'season_data' && key != 'player_id' && key != 'team_id' && key != 'season_id' && key != 'captain' && key != 'league_id' && key != 'type' && key != 'league_data' && !key.includes('id')  && !key.includes('updated')
 
       })
       return keys;

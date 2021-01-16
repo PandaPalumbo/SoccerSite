@@ -1,6 +1,6 @@
 <template>
 
-  <b-col class="mx-auto my-1 overflow-auto" cols="11" >
+  <b-col class="mx-auto my-1 overflow-auto" cols="11">
     <b-table striped table-variant="dark" :items="data" :fields="fields" thead-class="m-4">
     </b-table>
   </b-col>
@@ -17,15 +17,21 @@ export default {
     },
   },
   computed: {
-    fields(){
+    fields() {
       let fields = Object.keys(this.data[0]);
-      return fields.map(field => ({
-        key:field,
-        label: this.prettyCasing(field),
-        sortable:true,
-        thClass:['header-class'],
-        tdClass:['body-class']
-      }));
+      return fields.map(field => {
+            if (!field.includes('id') && !field.includes('updated')) {
+              let obj = {
+                key: field,
+                label: this.prettyCasing(field),
+                sortable: true,
+                thClass: ['header-class'],
+                tdClass: ['body-class']
+              }
+              return obj;
+            }
+          }
+      );
     }
   },
   methods: {
@@ -51,10 +57,11 @@ export default {
 </script>
 
 <style>
-.header-class{
+.header-class {
   min-width: 150px;
 }
-.body-class{
-  margin:auto;
+
+.body-class {
+  margin: auto;
 }
 </style>
