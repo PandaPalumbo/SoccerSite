@@ -46,7 +46,7 @@
       >
         <LeagueStats :stats="stats" :league="data"/>
       </b-tab>
-      <b-tab title-link-class="text-light  font-weight-bold" title="Player Stats" class="p-4"
+      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Stats" class="p-4"
       >
         <PlayerStandings :assists="data.season.data.aggregatedAssistscorers.data" :goals="data.season.data.aggregatedGoalscorers.data" :cards="data.season.data.cardscorers.data"/>
       </b-tab>
@@ -54,9 +54,9 @@
       >
         <LeagueTeamStats :data="data.season.data.stats.data" />
       </b-tab>
-      <b-tab title-link-class="text-light  font-weight-bold" title="Fixtures"
+      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Fixtures"
       >
-        <LeagueFixtures :fixtures="data.season.data.fixtures.data.sort((b, a) => b.time.starting_at.timestamp - a.time.starting_at.timestamp)" />
+        <LeagueFixtures :fixtures="data.season.data.fixtures.data" />
       </b-tab>
     </b-tabs>
 
@@ -96,6 +96,7 @@ export default {
     currentSeasonStats() {
       return this.data.seasons.data.filter(season => season.is_current_season)[0]
     },
+
   },
   data() {
     return {

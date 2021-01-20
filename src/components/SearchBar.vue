@@ -10,13 +10,12 @@
         @keyup.down="onArrowKey('down')"
         @keyup.enter="search"
         @update="(value) => search(value)"
-        @change="(value) => search(value)"
         @cancel="focused = false"
     />
 <!--    TODO one search for leagues another to grab that leagues data once selected-->
       <!--    Player search bar-->
-    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue && dataType === 'players'">
-      <div v-for="(item, i) in suggestions.slice(0, 10)" :key="i" >
+    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && playerSuggestions && searchValue && dataType === 'players'">
+      <div v-for="(item, i) in playerSuggestions.slice(0, 10)" :key="i" >
         <b-list-group-item class="py-2" href="#"
                            @mousedown.stop="addSelectedValue(item)" variant="dark">
           <b-row class="d-flex w-100 p-0 m-0">
@@ -44,9 +43,15 @@
       </div>
 
     </b-list-group>
+    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && searchValue &&  (!leagueSuggestions || !playerSuggestions) ">
+      <b-list-group-item class="py-2" href="#" variant="dark">
+
+        <b-spinner variant="dark"></b-spinner>
+      </b-list-group-item>
+    </b-list-group>
     <!--    League search bar-->
-    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && suggestions && searchValue && dataType === 'leagues'">
-      <div v-for="(item, i) in suggestions.slice(0, 10)" :key="i" >
+    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && leagueSuggestions && searchValue && dataType === 'leagues'">
+      <div v-for="(item, i) in leagueSuggestions.slice(0, 10)" :key="i" >
         <b-list-group-item class="py-2" href="#"
                            @mousedown.stop="addSelectedValue(item)" variant="dark">
           <b-row class="d-flex w-100 p-0 m-0">
@@ -69,6 +74,12 @@
         </b-list-group-item>
       </div>
 
+    </b-list-group>
+    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && searchValue &&  (!leagueSuggestions || !playerSuggestions) ">
+      <b-list-group-item class="py-2" href="#" variant="dark">
+
+        <b-spinner variant="dark"></b-spinner>
+      </b-list-group-item>
     </b-list-group>
   </div>
 </template>
@@ -94,14 +105,15 @@ export default {
   },
   computed: {
     ...mapState({
-      suggestions: state => state.players,
+      playerSuggestions: state => state.players,
+      leagueSuggestions: state => state.leagues,
       selectedPlayers: state => state.selected.players,
     }),
     isSearching() {
       if (this.focused)
         return true;
 
-      return this.text !== null && this.text !== '';
+      return this.searchValue !== null && this.searchValue !== '';
     },
   },
   methods: {

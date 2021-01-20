@@ -26,7 +26,7 @@
           <b-col cols="2">
             <b-row>
               <p class="m-auto bigger-text font-weight-bold ">
-                {{ new Date(fixture.time.starting_at.timestamp).toLocaleTimeString()}}
+                {{ new Date(fixture.time.starting_at.timestamp * 1000).toLocaleTimeString()}}
               </p>
             </b-row>
             <b-row>
@@ -40,13 +40,16 @@
               {{fixture.time.status == 'FT' ? 'Full-time' : ''}}
               {{fixture.time.status == 'ABAN' ? 'Abandoned' : ''}}
               {{fixture.time.status == 'SUSP' ? 'Suspended' : ''}}
+              {{fixture.time.status == 'POSTP' ? 'Postponed' : ''}}
               </p>
             </b-row>
           </b-col>
 
           <!--    Away Team      -->
           <b-col cols="5">
-            <b-row :class="'bg-'+determineOutcomeVariant(fixture, 'visitorteam_score') + ' rounded p-2'">
+            <b-row
+                :class="'bg-'+determineOutcomeVariant(fixture, 'visitorteam_score') + ' rounded p-2'"
+            >
               <b-col cols="2"  class="m-auto">
                 <p class="m-auto score-text font-weight-bold ">{{ fixture.scores.visitorteam_score }}</p>
               </b-col>
