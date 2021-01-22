@@ -2,17 +2,15 @@ import axios from 'axios';
 import fbConfig from './firebase';
 import firebase from 'firebase';
 
-//base url stuff for https://soccersapi.com/page/documentation
-//https://documenter.getpostman.com/view/11399692/SztA99ag?version=latest#dd5b9f84-354e-46b5-8479-227bf8a98573
+//https://sportmonks.com/docs/
 
-//API Username and token saved to .env file
-const user = process.env.VUE_APP_USER
+//API  token saved to .env file
 const token = process.env.VUE_APP_TOKEN
 
 // the base url for the api,
 // and the user/token query params that need to be tacked on after our type is added to base url
-const baseQuery = '?user=' + user + '&token=' + token;
-const baseUrl = 'https://api.soccersapi.com/v2.2/'
+const baseQuery = '?&api_token=' + token;
+const baseUrl = 'https://soccer.sportmonks.com/api/v2.0/'
 
 
 let db = null;
@@ -179,6 +177,15 @@ export default {
         //hits the endpoint that retrieves players given a name
         searchLeagues: (query, callback) => {
             let config = buildDBConfig('search/leagues/?search=' + encodeURI(query));
+            retrieve(config, (data) => {
+
+                callback(data);
+            })
+        },
+
+        //hits the endpoint that retrieves players given a name
+        searchTeams: (query, callback) => {
+            let config = buildDBConfig('search/teams/?search=' + encodeURI(query));
             retrieve(config, (data) => {
 
                 callback(data);

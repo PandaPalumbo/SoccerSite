@@ -8,9 +8,7 @@
         @blur="focused = false"
         @keyup.up="onArrowKey('up')"
         @keyup.down="onArrowKey('down')"
-        @keyup.enter="search"
-        @update="(value) => search(value)"
-        @cancel="focused = false"
+        @keydown.enter="(val) => search(val.path[0].value)"        @cancel="focused = false"
     />
 <!--    TODO one search for leagues another to grab that leagues data once selected-->
       <!--    Player search bar-->
@@ -43,14 +41,8 @@
       </div>
 
     </b-list-group>
-    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && searchValue &&  (!leagueSuggestions || !playerSuggestions) ">
-      <b-list-group-item class="py-2" href="#" variant="dark">
-
-        <b-spinner variant="dark"></b-spinner>
-      </b-list-group-item>
-    </b-list-group>
     <!--    League search bar-->
-    <b-list-group class="position-absolute w-100 suggestions" v-if="focused && leagueSuggestions && searchValue && dataType === 'leagues'">
+    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && leagueSuggestions && searchValue && dataType === 'leagues'">
       <div v-for="(item, i) in leagueSuggestions.slice(0, 10)" :key="i" >
         <b-list-group-item class="py-2" href="#"
                            @mousedown.stop="addSelectedValue(item)" variant="dark">
@@ -75,10 +67,44 @@
       </div>
 
     </b-list-group>
-    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && searchValue &&  (!leagueSuggestions || !playerSuggestions) ">
-      <b-list-group-item class="py-2" href="#" variant="dark">
 
-        <b-spinner variant="dark"></b-spinner>
+
+    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && teamSuggestions && searchValue && dataType === 'teams'">
+      <div v-for="(item, i) in teamSuggestions.slice(0, 10)" :key="i" >
+        <b-list-group-item class="py-2" href="#"
+                           @mousedown.stop="addSelectedValue(item)" variant="dark">
+          <b-row class="d-flex w-100 p-0 m-0">
+            <b-col cols="1">
+              <img class="league-img bg-light"
+                   :src="item.logo_path"/>
+            </b-col>
+            <b-col cols="10" class="p-0 m-0">
+              <p class="p-0 m-0">
+                <strong>Name - </strong>
+                {{ item.name }}
+              </p>
+              <p class="p-0 m-0">
+                <strong>Country - </strong>
+                {{item.country.data.name + " " }}
+              </p>
+              <p class="p-0 m-0">
+                <strong>League - </strong>
+                {{item.league  ? item.league.data.name + " " : 'Data not collected'}}
+              </p>
+            </b-col>
+
+          </b-row>
+        </b-list-group-item>
+      </div>
+
+    </b-list-group>
+
+    <b-list-group class="position-absolute w-100 suggestions" v-else-if="focused && searchValue &&  (!teamSuggestions || !playerSuggestions || !leagueSuggestions) ">
+      <b-list-group-item class="py-2" href="#" variant="dark">
+        <b-row>
+          <b-spinner variant="dark"></b-spinner>
+          Press enter to search
+        </b-row>
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -107,6 +133,7 @@ export default {
     ...mapState({
       playerSuggestions: state => state.players,
       leagueSuggestions: state => state.leagues,
+      teamSuggestions: state => state.teams,
       selectedPlayers: state => state.selected.players,
     }),
     isSearching() {
@@ -115,6 +142,7 @@ export default {
 
       return this.searchValue !== null && this.searchValue !== '';
     },
+
   },
   methods: {
     addSelectedValue(item) {
@@ -126,6 +154,7 @@ export default {
       this.focused = false;
     },
     onArrowKey(direction) {
+      console.log(direction)
       if (direction === 'up')
         this.index--;
       else if (direction === 'down')
@@ -135,6 +164,7 @@ export default {
       this.search(val)
     },
     search(val) {
+      console.log(val);
       if (val.length >= 4) {
         //console.log('hit componenet search method')
         if(this.dataType === 'players')
@@ -145,15 +175,19 @@ export default {
           this.$store.dispatch('queryLeagues', {
             query: val
           })
+        if(this.dataType === 'teams')
+          this.$store.dispatch('queryTeams', {
+            query: val
+          })
       }
     },
     getPlaceholder(){
       if(this.dataType === 'players'){
-        return 'Type player name to search...'
+        return 'Type player name and press "Enter" to search...'
       } else if(this.dataType === 'leagues' ){
-        return 'Type league name to search...'
+        return 'Type league name and press "Enter" to search...'
       } else if(this.dataType === 'teams'){
-        return 'Type team name to search...'
+        return 'Type team name and press "Enter" to search...'
       } else {
         return 'Type player name to search...'
       }

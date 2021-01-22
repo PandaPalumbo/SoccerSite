@@ -42,9 +42,11 @@
     <!--  Data Container  -->
     <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold"
             class="tab w-100 bg-dark league-list ">
+
       <b-tab title-link-class="text-light  font-weight-bold" title="League Stats"
       >
         <LeagueStats :stats="stats" :league="data"/>
+
       </b-tab>
       <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Stats" class="p-4"
       >
@@ -58,6 +60,7 @@
       >
         <LeagueFixtures :fixtures="data.season.data.fixtures.data" />
       </b-tab>
+<!--      TODO League Standings -->
     </b-tabs>
 
 

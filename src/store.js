@@ -6,7 +6,7 @@ import VuexPersistence from 'vuex-persist';
 const vuexLocal = new VuexPersistence({
     storage: window.localStorage,
     reducer: (state) => ({
-        selectedPlayers: state.selected.players
+        selected: state.selected
     })
 })
 
@@ -99,6 +99,14 @@ export default new Vuex.Store({
             state.leagues = null;
             api.getData.searchLeagues(query, (data) => {
                     state.leagues = data;
+                    console.log(data);
+                }
+            );
+        },
+        queryTeams({state}, {query}) {
+            state.teams = null;
+            api.getData.searchTeams(query, (data) => {
+                    state.teams = data;
                     console.log(data);
                 }
             );

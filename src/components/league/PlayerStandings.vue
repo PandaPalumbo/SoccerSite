@@ -22,7 +22,9 @@
 import PlayerTable from "@/components/charts/PlayerTable";
 export default {
   name: "PlayerStandings",
-  components:{PlayerTable},
+  components:{
+    PlayerTable
+  },
   props: {
     goals: {
       type: Array,

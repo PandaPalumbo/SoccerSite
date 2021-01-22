@@ -49,9 +49,28 @@ app.get('/search/leagues', (req, res) => {
     if(search) {
         let config = buildAPIConfig({
             type:'leagues/search/'+search,
-            query:'&include=country,season,season.stats,season.stats.mostcleansheetsteam,season.stats.mostgoalsteam,season.stats.mostgoalspermatchteam,season.stats.mostconcededgoalsteam,season.stats.mostcornersteam,seasons,seasons.stats,season.aggregatedAssistscorers.player,season.aggregatedAssistscorers.team,season.cardscorers.player,,season.cardscorers.team,season.aggregatedGoalscorers.player,season.aggregatedGoalscorers.team,season.fixtures,season.round,season.fixtures.localTeam,season.fixtures.visitorTeam,season.upcoming.localTeam,season.upcoming.visitorTeam,season.results.localTeam,results.visitorTeam'
+            query:'&include=country,season,season.stats,season.stats.mostcleansheetsteam,season.stats.mostgoalsteam,season.stats.mostgoalspermatchteam,season.stats.mostconcededgoalsteam,season.stats.mostcornersteam,seasons,seasons.stats,season.aggregatedAssistscorers.player,' +
+                'season.aggregatedAssistscorers.team,season.cardscorers.player,,season.cardscorers.team,season.aggregatedGoalscorers.player,season.aggregatedGoalscorers.team,season.fixtures,season.round,season.fixtures.localTeam,season.fixtures.visitorTeam,season.upcoming.localTeam,season.upcoming.visitorTeam,season.results.localTeam,results.visitorTeam'
         })
+        console.log(config);
         retrieve(config, (data)=> {
+            res.send(data.data);
+        })
+    }
+    else
+        res.send('No player name sent...')
+})
+
+app.get('/search/teams', (req, res) => {
+    let search = req.query.search;
+    if(search) {
+        let config = buildAPIConfig({
+            type:'teams/search/'+search,
+            query:'&include=league,country,squad.player,coach,transfers,sidelined,stats,venue,fifaranking,uefaranking,trophies'
+        })
+        console.log(config);
+        retrieve(config, (data)=> {
+
             res.send(data.data);
         })
     }

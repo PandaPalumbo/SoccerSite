@@ -26,10 +26,13 @@
       <!--   Single League view, shows this leagues stats and some graphs   -->
       <div class="m-2 bg-light-dark rounded p-2" v-show="selectedLeagues.length > 0 && !comparing">
         <b-tabs active-nav-item-class="bg-light-dark text-light " class="bg-dark rounded p-1">
+
+
           <b-tab title-link-class="font-weight-bold text-light" v-for="(league, i) in selectedLeagues" :key="i"
                  :title="league.name">
             <LeagueDashboard :id="parseInt(league.id)" :data="league"/>
           </b-tab>
+
         </b-tabs>
       </div>
       <!-- Comparison View, compares all selected leagues-->
