@@ -7,7 +7,7 @@
           <b-col cols="3">
             <b-row>
               <img class="player-img" :src="filteredData.item.player.data.image_path"/>
-              <img class="team-img" :src="filteredData.item.team.data.logo_path"/>
+              <img v-if="filteredData.item.team" class="team-img" :src="filteredData.item.team.data.logo_path"/>
             </b-row>
           </b-col>
           <b-col class="text-left big">
@@ -31,7 +31,7 @@
           <b-col cols="3">
             <b-row>
               <img class="player-img" :src="filteredData.item.player.data.image_path"/>
-              <img class="team-img" :src="filteredData.item.team.data.logo_path"/>
+              <img v-if="filteredData.item.team" class="team-img" :src="filteredData.item.team.data.logo_path"/>
             </b-row>
           </b-col>
           <b-col class="text-left big">
@@ -54,7 +54,7 @@
           <b-col cols="3">
             <b-row>
               <img class="player-img" :src="filteredData.item.player.data.image_path"/>
-              <img class="team-img" :src="filteredData.item.team.data.logo_path"/>
+              <img v-if="filteredData.item.team" class="team-img" :src="filteredData.item.team.data.logo_path"/>
             </b-row>
           </b-col>
           <b-col class="text-left big">
@@ -148,7 +148,7 @@ export default {
         return this.data.map(player => ({
           name: player.player.data.name,
           player: player.player,
-          team: player.team,
+          team: player.team ? player.team : null,
           goals: player.goals,
           penalty_goals: player.penalty_goals,
         }))
@@ -156,7 +156,7 @@ export default {
         return this.data.map(player => ({
           name: player.player.data.name,
           player: player.player,
-          team: player.team,
+          team:  player.team ? player.team : null,
           assists: player.assists,
         }))
       } else if (this.statType === 'cards') {
@@ -164,7 +164,7 @@ export default {
           let obj = {
             name: player.player.data.name,
             player: player.player,
-            team: player.team,
+            team:  player.team ? player.team : null,
             redcards: player.redcards,
             yellowcards: player.yellowcards,
           }

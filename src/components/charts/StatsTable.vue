@@ -109,7 +109,13 @@ export default {
     wantedDataPoints() {
       let keys = Object.keys(this.data);
       keys = keys.filter(key => {
-        return key != 'season_data' && key != 'player_id' && key != 'team_id' && key != 'season_id' && key != 'captain' && key != 'league_id' && key != 'type' && key != 'league_data' && !key.includes('id')  && !key.includes('updated')
+        return key != 'season_data' &&
+            key != 'player_id' && key != 'team_id'
+            && key != 'season_id' && key != 'captain'
+            && key != 'league_id' && key != 'type'
+            && key != 'league_data' && !key.includes('id')
+            && !key.includes('updated') && !key.includes('minutes')
+            && !key.includes('goal_line') && !key.includes('name')
 
       })
       return keys;

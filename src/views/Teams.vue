@@ -19,7 +19,7 @@
           </b-row>
         </b-col>
         <b-col>
-          <SelectedPill type="team" v-for="(team) in selectedTeams" :key="team.id" :data="team"
+          <SelectedPill type="teams" v-for="(team) in selectedTeams" :key="team.id" :data="team"
                         :label="team.name" variant="danger"/>
         </b-col>
       </b-row>

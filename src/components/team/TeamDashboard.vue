@@ -25,6 +25,10 @@
                     <b-row class=" smaller-font">
                       Trophies Runner-up - {{trophiesTotal.runnerUp}}
                     </b-row>
+                    <b-row class=" smaller-font">
+                      {{data.uefaranking ? "UEFA Ranking - " + data.uefaranking.data.position : ''}}
+                      {{data.fifaranking ? "FIFA Ranking - " + data.fifaranking.data.position : ''}}
+                    </b-row>
                   </b-col>
                   <b-col cols="6">
                     <b-row></b-row>
@@ -38,13 +42,33 @@
 
       </b-jumbotron>
     </b-row>
-<!--    &lt;!&ndash;  Data Container  &ndash;&gt;-->
-<!--    <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold"-->
-<!--            class="tab w-100 bg-dark league-list ">-->
-<!--      <b-tab title-link-class="text-light  font-weight-bold" title="League Stats"-->
-<!--      >-->
-<!--        <LeagueStats :stats="stats" :league="data"/>-->
-<!--      </b-tab>-->
+    <!--  Data Container  -->
+    <b-tabs fill active-nav-item-class="bg-light-dark text-light font-weight-bold"
+            class="tab w-100 bg-dark league-list ">
+
+      <b-tab title-link-class="text-light  font-weight-bold" title="Squad" class="text-light"
+      >
+        <TeamSquad :squad="data.squad.data.sort((a,b) => b.appearences - a.appearences)" />
+      </b-tab>
+      <b-tab title-link-class="text-light  font-weight-bold" title="League Stats"
+      >
+        <TeamStats :stats="stats" :league="data"/>
+      </b-tab>
+      <b-tab title-link-class="text-light  font-weight-bold" title="Cup Stats" class="text-light"
+      >
+        TODO Combine cup round stats to make one stat
+      </b-tab>
+
+      <b-tab title-link-class="text-light  font-weight-bold" title="Trophies" class="text-light"
+      >
+        <TeamTrophies :trophies="data.trophies.data.filter(trophy => trophy.status == 'Winner')"/>
+      </b-tab>
+
+      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Standings" class="text-light"
+      >
+        <TeamPlayerStandings :id="data.id" />
+      </b-tab>
+
 <!--      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Stats" class="p-4"-->
 <!--      >-->
 <!--        <PlayerStandings :assists="data.season.data.aggregatedAssistscorers.data" :goals="data.season.data.aggregatedGoalscorers.data" :cards="data.season.data.cardscorers.data"/>-->
@@ -57,22 +81,27 @@
 <!--      >-->
 <!--        <LeagueFixtures :fixtures="data.season.data.fixtures.data" />-->
 <!--      </b-tab>-->
-<!--    </b-tabs>-->
+    </b-tabs>
 
 
   </div>
 </template>
 
 <script>
-// import LeagueStats from "@/components/league/LeagueStats";
-// import PlayerStandings from "@/components/league/PlayerStandings";
+import TeamStats from "@/components/team/TeamStats";
+import TeamTrophies from "@/components/team/TeamTrophies";
+import TeamSquad from "@/components/team/TeamSquad";
+import TeamPlayerStandings from "@/components/team/TeamPlayerStandings";
 // import LeagueTeamStats from "@/components/league/LeagueTeamStats";
 // import LeagueFixtures from "@/components/league/LeagueFixtures";
 
 export default {
-  name: "League",
+  name: "TeamDashboard",
   components: {
-    // LeagueStats,
+    TeamStats,
+    TeamTrophies,
+    TeamSquad,
+    TeamPlayerStandings
     // PlayerStandings,
     // LeagueTeamStats,
     // LeagueFixtures

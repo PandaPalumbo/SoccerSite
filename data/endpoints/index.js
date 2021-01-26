@@ -66,7 +66,7 @@ app.get('/search/teams', (req, res) => {
     if(search) {
         let config = buildAPIConfig({
             type:'teams/search/'+search,
-            query:'&include=league,country,squad.player,coach,transfers,sidelined,stats,venue,fifaranking,uefaranking,trophies'
+            query:'&include=league,country,squad.player.position,coach,transfers,sidelined,stats.season.league,venue,fifaranking,uefaranking,trophies'
         })
         console.log(config);
         retrieve(config, (data)=> {
@@ -76,6 +76,23 @@ app.get('/search/teams', (req, res) => {
     }
     else
         res.send('No player name sent...')
+})
+
+app.get('/search/teams/standings', (req, res) => {
+    let search = req.query.id;
+    if(search) {
+        let config = buildAPIConfig({
+            type:'teams/'+search,
+            query:'&include=aggregatedGoalscorers.player,aggregatedAssistscorers.player,aggregatedCardscorers.player'
+        })
+        console.log(config);
+        retrieve(config, (data)=> {
+
+            res.send(data.data);
+        })
+    }
+    else
+        res.send('No id name sent...')
 })
 
 app.listen(port, () => {

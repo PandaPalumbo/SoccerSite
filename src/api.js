@@ -191,6 +191,14 @@ export default {
                 callback(data);
             })
         },
+        //hits the endpoint that retrieves players given a name
+        getTeamPlayerStandings: (query, callback) => {
+            let config = buildDBConfig('search/teams/standings/?id=' + encodeURI(query));
+            retrieve(config, (data) => {
+
+                callback(data);
+            })
+        },
 
     },
     firebase: {
@@ -229,9 +237,15 @@ export default {
             })
             return res;
         },
-        getColor() {
-            return this.$randomColor({luminosity: 'bright'}).toString();
+        getColor(alpha) {
+            let r1 = (Math.random() * 255).toFixed(2)
+            let r2 = (Math.random() * 255).toFixed(2)
+            let r3 = (Math.random() * 255).toFixed(2)
+            return ['rgb('+r1+','+r2+','+r3+','+alpha+')', 'rgb('+r1+','+r2+','+r3+',1)'];
         },
+        getPosition(id){
+            return id;
+        }
     }
 }
 
