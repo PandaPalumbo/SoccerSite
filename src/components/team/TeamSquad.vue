@@ -9,7 +9,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(player, i ) in squad.sort((a,b) => b.appearences - a.appearences)" :key="i">
+      <tr v-for="(player, i ) in sortedSquad" :key="i">
         <td class="font-weight-bold">
           <img class="mx-2" :src="player.player.data.image_path" />{{player.player.data.common_name}}
         </td>
@@ -31,7 +31,11 @@ name: "TeamSquad",
     },
   },
   computed:{
-
+      sortedSquad(){
+        let squad = this.squad;
+        squad = squad.sort((a,b) => b.appearences - a.appearences)
+        return squad;
+      }
   }
 }
 </script>

@@ -83,7 +83,9 @@ app.get('/search/teams/standings', (req, res) => {
     if(search) {
         let config = buildAPIConfig({
             type:'teams/'+search,
-            query:'&include=aggregatedGoalscorers.player,aggregatedAssistscorers.player,aggregatedCardscorers.player'
+            query:'&include=aggregatedGoalscorers.player,aggregatedGoalscorers.team,' +
+                'aggregatedAssistscorers.player,aggregatedAssistscorers.team,' +
+                'aggregatedCardscorers.player,aggregatedCardscorers.team'
         })
         console.log(config);
         retrieve(config, (data)=> {

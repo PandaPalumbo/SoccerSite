@@ -87,6 +87,11 @@ export default {
       type: String,
       required: true,
     },
+    isTeams: {
+      type: Boolean,
+      required: false,
+    },
+
   },
   computed: {
     fields() {

@@ -48,25 +48,28 @@
 
       <b-tab title-link-class="text-light  font-weight-bold" title="Squad" class="text-light"
       >
-        <TeamSquad :squad="data.squad.data.sort((a,b) => b.appearences - a.appearences)" />
+        <b-row class="text-center m-2">
+          <span class="text-warning mx-auto">* League Statistics</span>
+        </b-row>
+        <TeamSquad :squad="squad" />
       </b-tab>
       <b-tab title-link-class="text-light  font-weight-bold" title="League Stats"
       >
-        <TeamStats :stats="stats" :league="data"/>
+        <TeamStats :stats="leagueStats" :league="data"/>
       </b-tab>
-      <b-tab title-link-class="text-light  font-weight-bold" title="Cup Stats" class="text-light"
-      >
-        TODO Combine cup round stats to make one stat
-      </b-tab>
+<!--      <b-tab title-link-class="text-light  font-weight-bold" title="Cup Stats" class="text-light"-->
+<!--      >-->
+<!--        <TeamStats :stats="cupStats" :league="data"/>-->
+<!--      </b-tab>-->
 
       <b-tab title-link-class="text-light  font-weight-bold" title="Trophies" class="text-light"
       >
-        <TeamTrophies :trophies="data.trophies.data.filter(trophy => trophy.status == 'Winner')"/>
+        <TeamTrophies :trophies="trophies"/>
       </b-tab>
 
       <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Standings" class="text-light"
       >
-        <TeamPlayerStandings :id="data.id" />
+        <TeamPlayerStandings :id="data.id" :current_season_id="data.current_season_id"/>
       </b-tab>
 
 <!--      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Stats" class="p-4"-->
@@ -118,8 +121,23 @@ export default {
     }
   },
   computed: {
-    stats() {
-      return this.data.stats.data;
+    trophies(){
+      return this.data.trophies.data.filter(trophy => trophy.status == 'Winner')
+    },
+    squad(){
+      let data = this.data
+          data = data.squad.data.sort((a,b) => b.appearences - a.appearences);
+      return data;
+    },
+    leagueStats() {
+      console.log(this.data);
+      return this.data.stats.data.filter(stat => stat.season).filter(stat => !stat.season.data.league.data.is_cup);
+    },
+    cupStats(){
+      //cups stats are given on round to round basis
+      let cups = this.data.stats.data.filter(stat => stat.season).filter(stat => stat.season.data.league.data.is_cup);
+      console.log(cups)
+      return cups;
     },
     trophiesTotal(){
       let count = {

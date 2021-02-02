@@ -80,7 +80,7 @@ export default {
     },
     seasons() {
       let stats = this.stats;
-      stats = stats.filter(stat => stat.season).filter(stat=> !stat.season.data.league.data.is_cup);
+      stats = stats.filter(stat => stat.season);
       stats = stats.map(stat => {
         stat['name'] = stat.season.data.name + ' - ' + stat.season.data.league.data.name;
         return {
