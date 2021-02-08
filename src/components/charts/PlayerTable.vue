@@ -184,7 +184,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 /*.player-img{*/
 /*  width: 50%;*/
 /*  height: 50%;*/

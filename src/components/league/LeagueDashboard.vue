@@ -28,7 +28,7 @@
                     </b-row>
                   </b-col>
                   <b-col cols="6">
-                    <b-row></b-row>
+
                   </b-col>
                 </b-row>
 

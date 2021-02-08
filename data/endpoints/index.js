@@ -1,24 +1,15 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-// const mysql = require('mysql');
 const axios = require('axios');
 
 const app = express();
 const port = 3000;
 app.use(cors());
 
-// const connection =  mysql.createConnection({
-//     host: process.env.HOST,
-//     user: process.env.USER,
-//     password: process.env.PW,
-//     database: process.env.DB
-// });
 
 const apiUrl = 'https://soccer.sportmonks.com/api/v2.0/';
 const apiQuery = '?api_token='+ process.env.TOKEN;
-
-
 
 
 app.get('/', (req, res) => {
@@ -66,7 +57,11 @@ app.get('/search/teams', (req, res) => {
     if(search) {
         let config = buildAPIConfig({
             type:'teams/search/'+search,
-            query:'&include=league,country,squad.player.position,coach,transfers,sidelined,stats.season.league,venue,fifaranking,uefaranking,trophies'
+            query:'&include=league,country,squad.player.position,coach,transfers,sidelined,' +
+                'stats.season.league,venue,fifaranking,uefaranking,trophies,' +
+                'latest.localTeam,latest.visitorTeam,latest.league,'+
+                'upcoming.localTeam,upcoming.visitorTeam,upcoming.league,' +
+                'transfers.fromTeam,transfers.toTeam,transfers.player'
         })
         console.log(config);
         retrieve(config, (data)=> {
@@ -104,7 +99,6 @@ app.listen(port, () => {
 function retrieve(config,cb) {
     axios(config).then(data =>{
         let res = data.data;
-        // console.log(data.data)
         cb(res);
     }).catch((e)=> console.error(e));
 }

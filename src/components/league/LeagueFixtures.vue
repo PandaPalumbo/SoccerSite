@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import MatchdayCard from "@/components/league/MatchdayCard";
+import MatchdayCard from "@/components/universal/MatchdayCard";
 export default {
 name: "LeagueFixtures",
   components:{

@@ -5,7 +5,7 @@ import firebase from 'firebase';
 //https://sportmonks.com/docs/
 
 //API  token saved to .env file
-const token = process.env.VUE_APP_TOKEN
+const token = 'MFWpuZWx6pJ9VsD40AxIjZyV3xaQjvVjPKot7RAehHiIEnFYK5t2siljWkXI'
 
 // the base url for the api,
 // and the user/token query params that need to be tacked on after our type is added to base url

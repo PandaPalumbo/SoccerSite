@@ -7,7 +7,7 @@
                v-for="(fixture, i) in fixtures" :key="i">
 
           <!--    Home Team      -->
-          <b-col cols="5">
+          <b-col cols="5" class="m-auto">
             <b-row  :class="'bg-'+determineOutcomeVariant(fixture, 'localteam_score') + ' rounded p-2'">
               <b-col  class="m-auto">
                 <p class="m-auto bigger-text font-weight-bold ">{{ fixture.localTeam.data.name }}</p>
@@ -16,7 +16,7 @@
                 <img class="team-img m-auto" :src="fixture.localTeam.data.logo_path"/>
               </b-col>
               <b-col cols="2" class="m-auto">
-                <p class="  score-text font-weight-bold ">{{ fixture.scores.localteam_score }}</p>
+                <p class=" m-auto score-text font-weight-bold ">{{ fixture.scores.localteam_score }}</p>
               </b-col>
 
             </b-row>
@@ -24,14 +24,24 @@
 
           <!--    Vs Time  Weather    -->
           <b-col cols="2">
+            <b-row v-if="fixture.league">
+              <p class="m-auto bigger-text font-weight-bold ">
+                <u>{{fixture.league.data.name}}</u>
+              </p>
+            </b-row>
+            <b-row v-if="!date">
+              <p class="m-auto bigger-text font-weight-bold ">
+                {{ new Date(fixture.time.starting_at.timestamp * 1000).toLocaleDateString()}}
+              </p>
+            </b-row>
             <b-row>
               <p class="m-auto bigger-text font-weight-bold ">
                 {{ new Date(fixture.time.starting_at.timestamp * 1000).toLocaleTimeString()}}
               </p>
             </b-row>
-            <b-row>
-              <p class="m-auto bigger-text font-weight-bold ">vs </p>
-            </b-row>
+<!--            <b-row>-->
+<!--              <p class="m-auto bigger-text font-weight-bold ">vs </p>-->
+<!--            </b-row>-->
             <b-row>
               <p class="m-auto bigger-text font-weight-bold ">
               {{fixture.time.status == 'NS' ? 'Not Started' : ''}}
@@ -46,7 +56,7 @@
           </b-col>
 
           <!--    Away Team      -->
-          <b-col cols="5">
+          <b-col cols="5" class="m-auto">
             <b-row
                 :class="'bg-'+determineOutcomeVariant(fixture, 'visitorteam_score') + ' rounded p-2'"
             >
@@ -78,7 +88,7 @@ export default {
     },
     date: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   methods:{
@@ -115,6 +125,8 @@ export default {
 .team-img {
   max-height: 75px;
   max-width: 75px;
+  height:75px;
+  width:75px;
 }
 
 .bigger-text {

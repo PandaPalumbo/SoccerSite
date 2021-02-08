@@ -10,9 +10,9 @@
       <b-row>
         <b-col cols="3" class="ml-4">
           <b-row>
-            <b-button v-show="!comparing" class="ml-2" @click="sidebarOpen = !sidebarOpen">
-              {{ sidebarOpen ? 'Hide Leagues' : 'Choose Leagues' }}
-            </b-button>
+<!--            <b-button v-show="!comparing" class="ml-2" @click="sidebarOpen = !sidebarOpen">-->
+<!--              {{ sidebarOpen ? 'Hide Leagues' : 'Choose Leagues' }}-->
+<!--            </b-button>-->
             <b-button v-show="selectedLeagues.length >1" class="ml-2" @click="canCompare">
               {{ comparing ? 'Stop Comparing' : 'Compare Selected' }}
             </b-button>
@@ -20,7 +20,7 @@
         </b-col>
         <b-col>
           <SelectedPill type="leagues" v-for="(league) in selectedLeagues" :key="league.id" :data="league"
-                        :label="league.name" variant="danger"/>
+                        :label="league.name" variant="danger" />
         </b-col>
       </b-row>
       <!--   Single League view, shows this leagues stats and some graphs   -->

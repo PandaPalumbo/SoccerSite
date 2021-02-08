@@ -30,8 +30,13 @@
                       {{data.fifaranking ? "FIFA Ranking - " + data.fifaranking.data.position : ''}}
                     </b-row>
                   </b-col>
-                  <b-col cols="6">
-                    <b-row></b-row>
+                  <b-col  class=" m-auto smaller-font" cols="6">
+                      <b-row>
+                        Coach: {{data.coach.data.common_name}}
+                      </b-row>
+                      <b-row class="m-auto">
+                        <img :src="data.coach.data.image_path" />
+                      </b-row>
                   </b-col>
                 </b-row>
 
@@ -57,10 +62,6 @@
       >
         <TeamStats :stats="leagueStats" :league="data"/>
       </b-tab>
-<!--      <b-tab title-link-class="text-light  font-weight-bold" title="Cup Stats" class="text-light"-->
-<!--      >-->
-<!--        <TeamStats :stats="cupStats" :league="data"/>-->
-<!--      </b-tab>-->
 
       <b-tab title-link-class="text-light  font-weight-bold" title="Trophies" class="text-light"
       >
@@ -72,18 +73,17 @@
         <TeamPlayerStandings :id="data.id" :current_season_id="data.current_season_id"/>
       </b-tab>
 
-<!--      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Player Stats" class="p-4"-->
-<!--      >-->
-<!--        <PlayerStandings :assists="data.season.data.aggregatedAssistscorers.data" :goals="data.season.data.aggregatedGoalscorers.data" :cards="data.season.data.cardscorers.data"/>-->
-<!--      </b-tab>-->
-<!--      <b-tab title-link-class="text-light  font-weight-bold" title="Team Stats"-->
-<!--      >-->
-<!--        <LeagueTeamStats :data="data.season.data.stats.data" />-->
-<!--      </b-tab>-->
-<!--      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Fixtures"-->
-<!--      >-->
-<!--        <LeagueFixtures :fixtures="data.season.data.fixtures.data" />-->
-<!--      </b-tab>-->
+      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Fixtures" class="text-light"
+      >
+        <TeamFixtures :latest="data.latest.data" :upcoming="data.upcoming.data"/>
+      </b-tab>
+
+      <b-tab lazy title-link-class="text-light  font-weight-bold" title="Transfers" class="text-light"
+      >
+        <TeamTransfers :transfers="data.transfers.data"/>
+      </b-tab>
+
+
     </b-tabs>
 
 
@@ -95,6 +95,9 @@ import TeamStats from "@/components/team/TeamStats";
 import TeamTrophies from "@/components/team/TeamTrophies";
 import TeamSquad from "@/components/team/TeamSquad";
 import TeamPlayerStandings from "@/components/team/TeamPlayerStandings";
+import TeamFixtures from "@/components/team/TeamFixtures";
+import TeamTransfers from "@/components/team/TeamTransfers";
+
 // import LeagueTeamStats from "@/components/league/LeagueTeamStats";
 // import LeagueFixtures from "@/components/league/LeagueFixtures";
 
@@ -104,7 +107,9 @@ export default {
     TeamStats,
     TeamTrophies,
     TeamSquad,
-    TeamPlayerStandings
+    TeamPlayerStandings,
+    TeamFixtures,
+    TeamTransfers
     // PlayerStandings,
     // LeagueTeamStats,
     // LeagueFixtures
@@ -156,7 +161,6 @@ export default {
     // currentSeasonStats() {
     //   return this.data.seasons.data.filter(season => season.is_current_season)[0]
     // },
-
   },
   data() {
     return {
