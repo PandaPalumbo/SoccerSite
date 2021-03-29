@@ -55,4 +55,9 @@ export default {
   min-height:1080px;
   height:100%;
 }
+
+.small-img {
+  width:50px;
+  height:50px;
+}
 </style>

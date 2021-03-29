@@ -52,9 +52,9 @@
       >
         <PlayerStandings :assists="data.season.data.aggregatedAssistscorers.data" :goals="data.season.data.aggregatedGoalscorers.data" :cards="data.season.data.cardscorers.data"/>
       </b-tab>
-      <b-tab title-link-class="text-light  font-weight-bold" title="Team Stats"
+      <b-tab title-link-class="text-light  font-weight-bold" title="Current Standings"
       >
-        <LeagueTeamStats :data="data.season.data.stats.data" />
+        <Standings :id="data.season.data.id"/>
       </b-tab>
       <b-tab lazy title-link-class="text-light  font-weight-bold" title="Fixtures"
       >
@@ -70,7 +70,7 @@
 <script>
 import LeagueStats from "@/components/league/LeagueStats";
 import PlayerStandings from "@/components/league/PlayerStandings";
-import LeagueTeamStats from "@/components/league/LeagueTeamStats";
+import Standings from "@/components/league/Standings";
 import LeagueFixtures from "@/components/league/LeagueFixtures";
 
 export default {
@@ -78,7 +78,7 @@ export default {
   components: {
     LeagueStats,
     PlayerStandings,
-    LeagueTeamStats,
+    Standings,
     LeagueFixtures
   },
 

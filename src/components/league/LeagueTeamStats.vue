@@ -95,6 +95,7 @@ export default {
   },
   computed: {
     filteredData() {
+
       let keys = Object.keys(this.data);
       let obj = {};
       keys.forEach(key => {
@@ -105,6 +106,9 @@ export default {
       console.log(obj);
       return obj;
     }
+  },
+  mounted() {
+    console.log(this.data)
   }
 }
 </script>

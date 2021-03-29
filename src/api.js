@@ -199,6 +199,14 @@ export default {
                 callback(data);
             })
         },
+        //hits the endpoint that retrieves players given a name
+        getCurrentLeagueStandings: (query, callback) => {
+            let config = buildDBConfig('standings/season/?id=' + encodeURI(query));
+            retrieve(config, (data) => {
+
+                callback(data);
+            })
+        },
 
     },
     firebase: {

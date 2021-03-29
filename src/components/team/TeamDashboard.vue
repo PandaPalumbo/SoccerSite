@@ -131,12 +131,13 @@ export default {
     },
     squad(){
       let data = this.data
-          data = data.squad.data.sort((a,b) => b.appearences - a.appearences);
+      console.log(data)
+          // data = data.squad.data.sort((a,b) => b.appearences - a.appearences);
       return data;
     },
     leagueStats() {
       console.log(this.data);
-      return this.data.stats.data.filter(stat => stat.season).filter(stat => !stat.season.data.league.data.is_cup);
+      return this.data.stats.data.filter(stat => stat.season).filter(stat => stat.season.data.league).filter(stat => !stat.season.data.league.data.is_cup);
     },
     cupStats(){
       //cups stats are given on round to round basis

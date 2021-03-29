@@ -40,11 +40,33 @@ app.get('/search/leagues', (req, res) => {
     if(search) {
         let config = buildAPIConfig({
             type:'leagues/search/'+search,
-            query:'&include=country,season,season.stats,season.stats.mostcleansheetsteam,season.stats.mostgoalsteam,season.stats.mostgoalspermatchteam,season.stats.mostconcededgoalsteam,season.stats.mostcornersteam,seasons,seasons.stats,season.aggregatedAssistscorers.player,' +
-                'season.aggregatedAssistscorers.team,season.cardscorers.player,,season.cardscorers.team,season.aggregatedGoalscorers.player,season.aggregatedGoalscorers.team,season.fixtures,season.round,season.fixtures.localTeam,season.fixtures.visitorTeam,season.upcoming.localTeam,season.upcoming.visitorTeam,season.results.localTeam,results.visitorTeam'
+            query:'&include=' +
+                'country,' +
+                'season,' +
+                'season.stats,' +
+                'season.stats.mostcleansheetsteam,' +
+                'season.stats.team_with_most_goals,' +
+                'season.stats.team_with_most_goals_per_match,' +
+                'season.stats.mostconcededgoalsteam,' +
+                'season.stats.mostcornersteam,' +
+                'seasons,seasons.stats,' +
+                'season.aggregatedAssistscorers.player,' +
+                'season.aggregatedAssistscorers.team,' +
+                'season.cardscorers.player,' +
+                'season.cardscorers.team,' +
+                'season.aggregatedGoalscorers.player,' +
+                'season.aggregatedGoalscorers.team,season.fixtures,' +
+                'season.round,'+
+                'season.fixtures.localTeam,' +
+                'season.fixtures.visitorTeam,' +
+                'season.upcoming.localTeam,' +
+                'season.upcoming.visitorTeam,' +
+                'season.results.localTeam,' +
+                'season.results.visitorTeam'
         })
         console.log(config);
         retrieve(config, (data)=> {
+            console.log(data)
             res.send(data.data);
         })
     }
@@ -81,6 +103,23 @@ app.get('/search/teams/standings', (req, res) => {
             query:'&include=aggregatedGoalscorers.player,aggregatedGoalscorers.team,' +
                 'aggregatedAssistscorers.player,aggregatedAssistscorers.team,' +
                 'aggregatedCardscorers.player,aggregatedCardscorers.team'
+        })
+        console.log(config);
+        retrieve(config, (data)=> {
+
+            res.send(data.data);
+        })
+    }
+    else
+        res.send('No id name sent...')
+})
+
+app.get('/standings/season/', (req, res) => {
+    let search = req.query.id;
+    if(search) {
+        let config = buildAPIConfig({
+            type:'standings/season/'+search,
+            query:'&include=standings.team'
         })
         console.log(config);
         retrieve(config, (data)=> {
