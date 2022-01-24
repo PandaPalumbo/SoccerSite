@@ -1,0 +1,761 @@
+{
+  "player": {
+    "id": 874,
+    "name": "Cristiano Ronaldo",
+    "firstname": "Cristiano Ronaldo",
+    "lastname": "dos Santos Aveiro",
+    "age": 37,
+    "birth": {
+      "date": "1985-02-05",
+      "place": "Funchal",
+      "country": "Portugal"
+    },
+    "nationality": "Portugal",
+    "height": "187 cm",
+    "weight": "83 kg",
+    "injured": false,
+    "photo": "https://media.api-sports.io/football/players/874.png"
+  },
+  "statistics": [
+    {
+      "team": {
+        "id": 27,
+        "name": "Portugal",
+        "logo": "https://media.api-sports.io/football/teams/27.png"
+      },
+      "league": {
+        "id": null,
+        "name": "WC Qualification Europe",
+        "country": null,
+        "logo": null,
+        "flag": null,
+        "season": "2022"
+      },
+      "games": {
+        "appearences": 7,
+        "lineups": 7,
+        "minutes": 630,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.328571",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": 31,
+        "on": 18
+      },
+      "goals": {
+        "total": 6,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 209,
+        "key": 10,
+        "accuracy": 23
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 63,
+        "won": 24
+      },
+      "dribbles": {
+        "attempts": 21,
+        "success": 11,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 4,
+        "committed": 5
+      },
+      "cards": {
+        "yellow": 2,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 2,
+        "missed": 1,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 33,
+        "name": "Manchester United",
+        "logo": "https://media.api-sports.io/football/teams/33.png"
+      },
+      "league": {
+        "id": 39,
+        "name": "Premier League",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/39.png",
+        "flag": "https://media.api-sports.io/flags/gb.svg",
+        "season": 2021
+      },
+      "games": {
+        "appearences": 17,
+        "lineups": 15,
+        "minutes": 1369,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.118750",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 2,
+        "out": 4,
+        "bench": 2
+      },
+      "shots": {
+        "total": 41,
+        "on": 20
+      },
+      "goals": {
+        "total": 8,
+        "conceded": 0,
+        "assists": 3,
+        "saves": null
+      },
+      "passes": {
+        "total": 435,
+        "key": 11,
+        "accuracy": 21
+      },
+      "tackles": {
+        "total": 3,
+        "blocks": null,
+        "interceptions": 1
+      },
+      "duels": {
+        "total": 119,
+        "won": 46
+      },
+      "dribbles": {
+        "attempts": 19,
+        "success": 12,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 12,
+        "committed": 9
+      },
+      "cards": {
+        "yellow": 4,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 2,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 496,
+        "name": "Juventus",
+        "logo": "https://media.api-sports.io/football/teams/496.png"
+      },
+      "league": {
+        "id": 135,
+        "name": "Serie A",
+        "country": "Italy",
+        "logo": "https://media.api-sports.io/football/leagues/135.png",
+        "flag": "https://media.api-sports.io/flags/it.svg",
+        "season": 2021
+      },
+      "games": {
+        "appearences": 1,
+        "lineups": 0,
+        "minutes": 31,
+        "number": null,
+        "position": "Attacker",
+        "rating": "6.200000",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 1,
+        "out": 0,
+        "bench": 1
+      },
+      "shots": {
+        "total": 1,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 13,
+        "key": 1,
+        "accuracy": 8
+      },
+      "tackles": {
+        "total": 1,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 3,
+        "won": 3
+      },
+      "dribbles": {
+        "attempts": 1,
+        "success": 1,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 1,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 1,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 33,
+        "name": "Manchester United",
+        "logo": "https://media.api-sports.io/football/teams/33.png"
+      },
+      "league": {
+        "id": 48,
+        "name": "League Cup",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/48.png",
+        "flag": "https://media.api-sports.io/flags/gb.svg",
+        "season": 2021
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 33,
+        "name": "Manchester United",
+        "logo": "https://media.api-sports.io/football/teams/33.png"
+      },
+      "league": {
+        "id": 45,
+        "name": "FA Cup",
+        "country": "England",
+        "logo": "https://media.api-sports.io/football/leagues/45.png",
+        "flag": "https://media.api-sports.io/flags/gb.svg",
+        "season": 2021
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 496,
+        "name": "Juventus",
+        "logo": "https://media.api-sports.io/football/teams/496.png"
+      },
+      "league": {
+        "id": 137,
+        "name": "Coppa Italia",
+        "country": "Italy",
+        "logo": "https://media.api-sports.io/football/leagues/137.png",
+        "flag": "https://media.api-sports.io/flags/it.svg",
+        "season": 2021
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 33,
+        "name": "Manchester United",
+        "logo": "https://media.api-sports.io/football/teams/33.png"
+      },
+      "league": {
+        "id": 2,
+        "name": "UEFA Champions League",
+        "country": "World",
+        "logo": "https://media.api-sports.io/football/leagues/2.png",
+        "flag": null,
+        "season": 2021
+      },
+      "games": {
+        "appearences": 5,
+        "lineups": 5,
+        "minutes": 432,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.680000",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 2,
+        "bench": 0
+      },
+      "shots": {
+        "total": 18,
+        "on": 12
+      },
+      "goals": {
+        "total": 6,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 144,
+        "key": 9,
+        "accuracy": 24
+      },
+      "tackles": {
+        "total": 1,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 43,
+        "won": 21
+      },
+      "dribbles": {
+        "attempts": 11,
+        "success": 6,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 6,
+        "committed": 3
+      },
+      "cards": {
+        "yellow": 1,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 496,
+        "name": "Juventus",
+        "logo": "https://media.api-sports.io/football/teams/496.png"
+      },
+      "league": {
+        "id": 2,
+        "name": "UEFA Champions League",
+        "country": "World",
+        "logo": "https://media.api-sports.io/football/leagues/2.png",
+        "flag": null,
+        "season": 2021
+      },
+      "games": {
+        "appearences": 0,
+        "lineups": 0,
+        "minutes": 0,
+        "number": null,
+        "position": "Attacker",
+        "rating": "7.680000",
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 0,
+        "bench": 0
+      },
+      "shots": {
+        "total": 18,
+        "on": 12
+      },
+      "goals": {
+        "total": 0,
+        "conceded": 0,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": 144,
+        "key": 9,
+        "accuracy": 24
+      },
+      "tackles": {
+        "total": 1,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": 43,
+        "won": 21
+      },
+      "dribbles": {
+        "attempts": 11,
+        "success": 6,
+        "past": null
+      },
+      "fouls": {
+        "drawn": 6,
+        "committed": 3
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": 0,
+        "missed": 0,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 496,
+        "name": "Juventus",
+        "logo": "https://media.api-sports.io/football/teams/496.png"
+      },
+      "league": {
+        "id": null,
+        "name": "Club Friendlies",
+        "country": null,
+        "logo": null,
+        "flag": null,
+        "season": "2021"
+      },
+      "games": {
+        "appearences": 1,
+        "lineups": 1,
+        "minutes": 63,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 1,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 0,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    },
+    {
+      "team": {
+        "id": 27,
+        "name": "Portugal",
+        "logo": "https://media.api-sports.io/football/teams/27.png"
+      },
+      "league": {
+        "id": 10,
+        "name": "Friendlies",
+        "country": "World",
+        "logo": "https://media.api-sports.io/football/leagues/10.png",
+        "flag": null,
+        "season": 2021
+      },
+      "games": {
+        "appearences": 3,
+        "lineups": 3,
+        "minutes": 207,
+        "number": null,
+        "position": "Attacker",
+        "rating": null,
+        "captain": false
+      },
+      "substitutes": {
+        "in": 0,
+        "out": 2,
+        "bench": 0
+      },
+      "shots": {
+        "total": null,
+        "on": null
+      },
+      "goals": {
+        "total": 2,
+        "conceded": null,
+        "assists": null,
+        "saves": null
+      },
+      "passes": {
+        "total": null,
+        "key": null,
+        "accuracy": null
+      },
+      "tackles": {
+        "total": null,
+        "blocks": null,
+        "interceptions": null
+      },
+      "duels": {
+        "total": null,
+        "won": null
+      },
+      "dribbles": {
+        "attempts": null,
+        "success": null,
+        "past": null
+      },
+      "fouls": {
+        "drawn": null,
+        "committed": null
+      },
+      "cards": {
+        "yellow": 0,
+        "yellowred": 0,
+        "red": 0
+      },
+      "penalty": {
+        "won": null,
+        "commited": null,
+        "scored": null,
+        "missed": null,
+        "saved": null
+      }
+    }
+  ]
+}

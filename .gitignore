@@ -1,5 +1,5 @@
 .DS_Store
-node_modules
+**/node_modules
 /dist
 
 
@@ -21,11 +21,11 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+client/.env
 .env
-.env
-.env
-data/chromedriver.exe
+**/.env
+server/chromedriver.exe
 *.exe
 package-lock.json
-/data/python/venv/
+/server/python/venv/
 package-lock.json
